@@ -1,27 +1,33 @@
+// 引入Vue和VueRouter
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 
+// 使用VueRouter
 Vue.use(VueRouter)
 
+// 创建路由规则
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: '/ebook'
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/ebook',
+    name: 'Ebook',
+    component: () => import('../views/ebook/index.vue'),
+    children: [
+      {
+        path: ':fileName',
+        component: () => import('../components/ebook/EbookReader.vue')
+      }
+    ]
   }
 ]
 
+// 创建配置好routes规则的VueRouter实例对象
 const router = new VueRouter({
   routes
 })
 
+// 导出路由
 export default router

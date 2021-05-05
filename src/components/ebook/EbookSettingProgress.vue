@@ -29,22 +29,22 @@
 
 <script>
   import {ebookMixin} from "../../utils/mixin";
-  import {getReadTime} from "../../utils/localStorage";
 
   export default {
     name: "EbookSettingProgress",
     mixins: [ebookMixin],
     computed: {
       getSectionName() {
-        if (this.getSection) {
-          if (this.getCurrentBook) {
-            const sectionInfo = this.getCurrentBook.section(this.getSection);
-            if (sectionInfo && sectionInfo.href && this.getCurrentBook.navigation) {
-              return this.getCurrentBook.navigation.get(sectionInfo.href).label;
-            }
-          }
-        }
-        return '';
+        // if (this.getSection) {
+        //   if (this.getCurrentBook) {
+        //     const sectionInfo = this.getCurrentBook.section(this.getSection);
+        //     if (sectionInfo && sectionInfo.href && this.getCurrentBook.navigation) {
+        //       return this.getCurrentBook.navigation.get(sectionInfo.href).label;
+        //     }
+        //   }
+        // }
+        // return '';
+        return this.getNavigation && this.getSection ? this.getNavigation[this.getSection].label : '';
       },
 
     },
@@ -52,19 +52,6 @@
       this.updateProgressBg();
     },
     methods: {
-      // 获取阅读时长，以分钟为单位
-      getReadTimeByMinute() {
-        const readTime = getReadTime(this.getFileName);
-        // 如果本地存储没有阅读时长，则设置为 0
-        if (!readTime) {
-          return 0;
-        } else {
-          return Math.ceil(readTime / 60);
-        }
-      },
-      getReadTimeText() {
-        return this.$t('book.haveRead').replace('$1', this.getReadTimeByMinute());
-      },
       onProgressChange(progress) {
         this.setProgress(progress).then(() => {
           this.displayProgress();

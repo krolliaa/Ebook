@@ -8,7 +8,7 @@ Vue.use(VueI18n);
 
 let locale = getLocale();
 if (!locale) {
-  locale = 'en';
+  locale = 'cn';
   setLocale(locale)
 }
 

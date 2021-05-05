@@ -31,6 +31,21 @@ const getters = {
   },
   getSection: state => {
     return state.book.section;
+  },
+  getCover: state => {
+    return state.book.cover;
+  },
+  getMetadata: state => {
+    return state.book.metadata;
+  },
+  getNavigation: state => {
+    return state.book.navigation;
+  },
+  getOffsetY: state => {
+    return state.book.offsetY;
+  },
+  getIsBookmark: state => {
+    return state.book.isBookmark;
   }
 }
 

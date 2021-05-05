@@ -1,13 +1,16 @@
 <template>
   <div class="ebook-reader">
     <div id="read"></div>
+    <div class="ebook-reader-mask"
+         @click="onMaskClick"
+         @touchmove="move"
+         @touchend="moveEnd"></div>
   </div>
 </template>
 
 <script>
   import Epub from 'epubjs'
   import {ebookMixin} from '../../utils/mixin.js'
-  import {addCss} from "../../utils/book";
   import {
     setFontSize,
     getFontSize,
@@ -16,8 +19,9 @@
     saveTheme,
     getTheme,
     getLocation,
-    clearLocalStorage
+    // clearLocalStorage
   } from "../../utils/localStorage";
+  import {flatten} from "../../utils/book";
 
   global.ePub = Epub;
   export default {
@@ -75,12 +79,7 @@
         }
         this.setMenuVisible(!this.getMenuVisible);
       },
-      // 隐藏标题栏和菜单栏，翻页时引用
-      hideTittleAndMenu() {
-        this.setMenuVisible(false);
-        this.setSettingVisible(-1);
-        this.setFontFamilyPopUpVisible(false);
-      },
+      // 初始化渲染
       initRendition() {
         this.rendition = this.book.renderTo('read', {
           width: innerWidth,
@@ -91,6 +90,7 @@
         const location = getLocation(this.getFileName);
         // 这里 location 为 null 时会自动不渲染
         this.display(location, () => {
+          this.parseBook();
           this.initTheme();
           this.initFontSize();
           this.initFontFamily();
@@ -160,11 +160,79 @@
           this.rendition.themes.register(theme.name, theme.style);
         });
         this.rendition.themes.select(defaultTheme);
+      },
+      parseBook() {
+        // 获取封面：cover
+        this.book.loaded.cover.then(cover => {
+          this.book.archive.createUrl(cover).then(url => {
+            this.setCover(url);
+          })
+        });
+        // 获取图书信息：metadata
+        this.book.loaded.metadata.then(metadata => {
+          this.setMetadata(metadata);
+        });
+        // 获取图书目录：navigation
+        this.book.loaded.navigation.then(nav => {
+          const navigation = flatten(nav.toc);
+
+          function find(item, level = 0) {
+            return item.parent ? find(navigation.filter(parentItem => parentItem.id === item.parent)[0], ++level) : level;
+          }
+
+          navigation.forEach(item => {
+            item.level = find(item);
+          });
+          this.setNavigation(navigation);
+        })
+      },
+      onMaskClick(e) {
+        const offsetX = e.offsetX;
+        const width = window.innerWidth;
+        if (offsetX > 0 && offsetX < width * 0.3) {
+          this.prevPage();
+        } else if (offsetX > 0 && offsetX > width * 0.7) {
+          this.nextPage();
+        } else {
+          this.toggleTitleAndMenu();
+        }
+      },
+      move(e) {
+        let offsetY = 0;
+        // 如果 firstOffsetY 存在，则给 offsetY 赋值，否则就将触碰的第一点的offsetY赋值给firstOffsetY
+        // 获取 firstOffsetY 用于获取整体的偏移量 = 手指最后滑动到的地方的 clientY - e.changedTouches[0].clientY
+        if (this.firstOffsetY) {
+          offsetY = e.changedTouches[0].clientY - this.firstOffsetY;
+          this.setOffsetY(offsetY);
+        } else {
+          this.firstOffsetY = e.changedTouches[0].clientY;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      moveEnd(e) {
+        this.setOffsetY(0);
+        this.firstOffsetY = null;
       }
     }
   }
 </script>
 
-<style scoped>
-  @import "../../assets/styles/global.scss";
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../assets/styles/global";
+
+  .ebook-reader {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    .ebook-reader-mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: transparent;
+      z-index: 150;
+      width: 100%;
+      height: 100%;
+    }
+  }
 </style>

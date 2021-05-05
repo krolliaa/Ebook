@@ -1,8 +1,9 @@
 <template>
-  <div class="ebook">
+  <div class="ebook" ref="ebook">
     <ebook-title></ebook-title>
     <ebook-reader></ebook-reader>
     <ebook-menu></ebook-menu>
+    <ebook-bookmark></ebook-bookmark>
   </div>
 </template>
 
@@ -10,6 +11,7 @@
   import EbookReader from "../../components/ebook/EbookReader";
   import EbookTitle from "../../components/ebook/EbookTitle";
   import EbookMenu from "../../components/ebook/EbookMenu";
+  import EbookBookmark from "../../components/ebook/EbookBookmark";
   import {ebookMixin} from "../../utils/mixin";
   import {getReadTime, saveReadTime} from "../../utils/localStorage";
 
@@ -19,7 +21,8 @@
     components: {
       EbookReader,
       EbookTitle,
-      EbookMenu
+      EbookMenu,
+      EbookBookmark
     },
     methods: {
       // 计时方法
@@ -37,6 +40,33 @@
             saveReadTime(this.getFileName, readTime);
           }
         }, 1000);
+      },
+      // 下拉
+      move(v) {
+        this.$refs.ebook.style.top = v + 'px';
+      },
+      // 弹回
+      restore() {
+        this.$refs.ebook.style.top = 0 + 'px';
+        // 添加动画效果,每次改变 v 都会产生 0.2s 动画
+        this.$refs.ebook.style.transition = 'all .2s linear';
+        // 所以这里等待 0.2s ，等待动画执行完毕之后清除动画
+        window.setTimeout(() => {
+          this.$refs.ebook.style.transition = '';
+        }, 200);
+      }
+    },
+    watch: {
+      // v 是新传入的 offsetY 的值
+      getOffsetY(v) {
+        // 只有菜单栏和标题栏隐藏以及图书未解析完毕才不显示
+        if (!this.getMenuVisible && this.getBookAvailable)
+          // 如果 v > 0 就下拉，等于 0 就弹回
+          if (v > 0) {
+            this.move(v);
+          } else if (v === 0) {
+            this.restore();
+          }
       }
     },
     // 在挂载的时候就开始计时
@@ -52,6 +82,14 @@
   }
 </script>
 
-<style scoped>
-  @import "../../assets/styles/global.scss";
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../assets/styles/global";
+
+  .ebook {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 </style>

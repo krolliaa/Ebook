@@ -11,6 +11,11 @@ const book = {
     bookAvailable: false, // 书籍是否解析完成分页完毕
     progress: 0, // 进度
     section: 0, // 章节
+    cover: null, // 图书封面
+    metadata: null, // 图书信息
+    navigation: null, // 图书目录
+    offsetY: 0, // 上下偏移量,
+    isBookmark: false, // 当前页是否为书签页
   },
   mutations: {
     SET_FILENAME: (state, newFileName) => {
@@ -45,7 +50,22 @@ const book = {
     },
     SET_SECTION: (state, section) => {
       state.section = section;
-    }
+    },
+    SET_COVER: (state, cover) => {
+      state.cover = cover;
+    },
+    SET_METADATA: (state, metadata) => {
+      state.metadata = metadata;
+    },
+    SET_NAVIGATION: (state, navigation) => {
+      state.navigation = navigation;
+    },
+    SET_OFFSETY: (state, offsetY) => {
+      state.offsetY = offsetY;
+    },
+    SET_IS_BOOKMARK: (state, isBookmark) => {
+      state.isBookmark = isBookmark;
+    },
   }
 }
 export default book;

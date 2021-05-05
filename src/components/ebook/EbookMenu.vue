@@ -21,6 +21,7 @@
     <ebook-setting-font-family-pop-up></ebook-setting-font-family-pop-up>
     <ebook-setting-theme></ebook-setting-theme>
     <ebook-setting-progress></ebook-setting-progress>
+    <ebook-slide></ebook-slide>
   </div>
 </template>
 
@@ -30,6 +31,7 @@
   import EbookSettingFontFamilyPopUp from "./EbookSettingFontFamilyPopUp";
   import EbookSettingTheme from "./EbookSettingTheme";
   import EbookSettingProgress from "./EbookSettingProgress";
+  import EbookSlide from "./EbookSlide";
 
   export default {
     name: "EbookMenu",
@@ -43,7 +45,8 @@
       EbookSettingFont,
       EbookSettingFontFamilyPopUp,
       EbookSettingTheme,
-      EbookSettingProgress
+      EbookSettingProgress,
+      EbookSlide
     }
   }
 </script>

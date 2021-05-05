@@ -20,12 +20,14 @@ export function clearLocalStorage() {
 
 // 获取渲染的电子书
 export function setBookObject(fileName, key, value) {
+  // bookmark 到这里仍然有数据
   let book = getLocalStorage(`${fileName}-info`);
   // 如果该书没有任何设置，给予一个空对象，然后设置传入的 key
   if (!book) {
     book = {}
   }
   book[key] = value;
+  // bookmark 到这里仍然有数据
   setLocalStorage(`${fileName}-info`, book);
 }
 
@@ -90,4 +92,13 @@ export function saveReadTime(fileName, readTime) {
 
 export function getReadTime(fileName) {
   return getBookObject(fileName, 'readTime');
+}
+
+// 书签
+export function saveBookmark(fileName, bookmark) {
+  setBookObject(fileName, 'bookmark', bookmark);
+}
+
+export function getBookmark(fileName) {
+  return getBookObject(fileName, 'bookmark');
 }

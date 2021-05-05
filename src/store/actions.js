@@ -32,6 +32,22 @@ const actions = {
   setSection: ({commit, state}, section) => {
     return commit('SET_SECTION', section);
   },
+  setCover: ({commit, state}, cover) => {
+    return commit('SET_COVER', cover);
+  },
+  setMetadata: ({commit, state}, metadata) => {
+    return commit('SET_METADATA', metadata);
+  },
+  setNavigation: ({commit, state}, navigation) => {
+    return commit('SET_NAVIGATION', navigation);
+  },
+  setOffsetY: ({commit, state}, offsetY) => {
+    return commit('SET_OFFSETY', offsetY);
+  },
+  setIsBookmark: ({commit, state}, isBookmark) => {
+    return commit('SET_IS_BOOKMARK', isBookmark);
+  },
+
 }
 
 export default actions

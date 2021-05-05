@@ -1,6 +1,6 @@
 import {mapGetters, mapActions} from 'vuex'
-import {themeList, addCss, removeAllCss} from "./book";
-import {saveLocation, setLocale} from "./localStorage";
+import {themeList, addCss, removeAllCss, getReadTimeByMinute} from "./book";
+import {saveLocation, getBookmark} from "./localStorage";
 
 export const ebookMixin = {
   computed: {
@@ -15,7 +15,12 @@ export const ebookMixin = {
       'getDefaultTheme',
       'getBookAvailable',
       'getProgress',
-      'getSection'
+      'getSection',
+      'getCover',
+      'getMetadata',
+      'getNavigation',
+      'getOffsetY',
+      'getIsBookmark'
     ]),
     getThemeList() {
       return themeList(this);
@@ -33,7 +38,12 @@ export const ebookMixin = {
       'setDefaultTheme',
       'setBookAvailable',
       'setProgress',
-      'setSection'
+      'setSection',
+      'setCover',
+      'setMetadata',
+      'setNavigation',
+      'setOffsetY',
+      'setIsBookmark'
     ]),
     initGlobalStyle() {
       switch (this.getDefaultTheme) {
@@ -55,12 +65,25 @@ export const ebookMixin = {
     // refreshLocation 方法可以获取当前位置，并且更新进度条，最后将当前位置保存到本地存储中
     refreshLocation() {
       const currentLocation = this.getCurrentBook.rendition.currentLocation();
-      if (!currentLocation.start) return;
-      const startCfi = currentLocation.start.cfi;
-      const progress = this.getCurrentBook.locations.percentageFromCfi(startCfi);
-      this.setProgress(Math.floor(progress * 100));
-      this.setSection(currentLocation.start.index);
-      saveLocation(this.getFileName, startCfi);
+      if (currentLocation && currentLocation.start) {
+        const startCfi = currentLocation.start.cfi;
+        const progress = this.getCurrentBook.locations.percentageFromCfi(startCfi);
+        this.setProgress(Math.floor(progress * 100));
+        this.setSection(currentLocation.start.index);
+        saveLocation(this.getFileName, startCfi);
+        const bookmark = getBookmark(this.getFileName);
+        if (bookmark) {
+          // 如果本地存储的书签信息中有当前cfi，就显示书签，否则不显示书签
+          if (bookmark.some(item => item.cfi === startCfi)) {
+            this.setIsBookmark(true);
+          } else {
+            this.setIsBookmark(false);
+          }
+          // 如果本地存储书签信息存在都不存在直接不显示书签
+        } else {
+          this.setIsBookmark(false);
+        }
+      }
     },
     display(target, cb) {
       if (target) {
@@ -74,6 +97,15 @@ export const ebookMixin = {
           if (cb) cb();
         })
       }
-    }
+    },
+    // 隐藏标题栏和菜单栏，翻页+目录引用
+    hideTittleAndMenu() {
+      this.setMenuVisible(false);
+      this.setSettingVisible(-1);
+      this.setFontFamilyPopUpVisible(false);
+    },
+    getReadTimeText() {
+      return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(this.getFileName));
+    },
   }
 }

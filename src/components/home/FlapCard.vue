@@ -10,12 +10,6 @@
           <div class="flap-card-semi-circle-right" :style="semiCircleStyle(item, 'right')" ref="right"></div>
         </div>
       </div>
-
-      <div class="point-wrapper" v-if="ifShowPoint">
-        <div class="point" :class="{'animation': runPointAnimation}" v-for="(item, index) in pointList"
-             :key="index"></div>
-      </div>
-
     </div>
 
     <!--设置关闭按钮-->
@@ -104,10 +98,119 @@
         this.$emit('close')
       },
       startAnimation() {
+        // 将runFlapCardAnimation设为true表示需要开始动画
+        setTimeout(() => {
+          this.startFlapCardAnimation();
+        }, 300);
         console.log("实现了动画效果");
       },
       stopAnimation() {
         console.log("关闭了动画效果");
+      },
+      startFlapCardAnimation() {
+        // 做一些动画前的准备，这里封装成了prepare()方法
+        this.prepare();
+        // 开启定时任务开始旋转
+        this.task = setInterval(() => {
+          this.rotateSemiCircle()
+        }, 300)
+      },
+      prepare() {
+        // // 获取下一个动画卡片，起始时下一张卡片index默认为 1
+        const backFlapCard = this.flapCardList[this.back];
+        // 获取下一张卡片的左半部分
+        const backLeftSemiCircle = this.$refs.left[this.back];
+        // 翻转成180度，因为要贴到上一张卡片的右边，提前翻转180度到右边
+        backFlapCard.rotateDegree = 180;
+        // 下一张卡片左半部分颜色提前变深，这样等等才能变浅，有个变动效果
+        backFlapCard._g = backFlapCard.g - 5 * 9
+        // 当前左半部分旋转度设置为0，传递下一张卡片和左半部分
+        this.rotate(backFlapCard, backLeftSemiCircle);
+      },
+      // 实现旋转 => 增加样式
+      rotate(item, dom) {
+        dom.style.transform = `rotateY(${item.rotateDegree}deg)`;
+        dom.style.backgroundColor = `rgb(${item.r} ,${item._g} ,${item.b})`
+      },
+      rotateSemiCircle() {
+        console.log("旋转中");
+        // 获取当前卡片
+        const frontFlapCard = this.flapCardList[this.front];
+        // 获取下一张卡片
+        const backFlapCard = this.flapCardList[this.back];
+        // 获取当前卡片的右半部分
+        const frontRightSemiCircle = this.$refs.right[this.front];
+        // 获取下一张卡片的左半部分
+        const backLeftSemiCircle = this.$refs.left[this.back];
+        // 当前卡片旋转度增加
+        frontFlapCard.rotateDegree += 10;
+        // 下一章卡片旋转度减少 prepare已将右半部分初始值设置为180
+        backFlapCard.rotateDegree -= 10;
+        // 当前卡片右半部分颜色加深
+        if (frontFlapCard.rotateDegree < 90) {
+          frontFlapCard._g -= 5
+        }
+        // 下一张卡片左半部分颜色变浅
+        if (backFlapCard.rotateDegree < 90) {
+          backFlapCard._g += 5
+        }
+        // 如果垂直了，下一张卡片的 zIndex 要增加
+        if (frontFlapCard.rotateDegree === 90 && backFlapCard.rotateDegree === 90) {
+          backFlapCard.zIndex += 2
+        }
+        // 当前卡片右半实现翻动效果
+        this.rotate(frontFlapCard, frontRightSemiCircle);
+        // 下一张卡片左半实现翻动效果
+        this.rotate(backFlapCard, backLeftSemiCircle);
+        // 当前卡片右半部分翻动180度之后就重置
+        if (frontFlapCard.rotateDegree === 180 && backFlapCard.rotateDegree === 0) {
+          this.reset();
+        }
+      },
+      reset() {
+        // 获取当前卡片
+        const frontFlapCard = this.flapCardList[this.front];
+        // 获取下一张卡片
+        const backFlapCard = this.flapCardList[this.back];
+        // 获取当前卡片的右半部分
+        const frontRightSemiCircle = this.$refs.right[this.front];
+        // 获取下一张卡片的左半部分
+        const backLeftSemiCircle = this.$refs.left[this.back];
+        // 重置当前卡片的旋转度为 0
+        frontFlapCard.rotateDegree = 0;
+        // 重置下一张卡片的旋转度为 0
+        backFlapCard.rotateDegree = 0;
+        // 恢复当前卡片颜色
+        frontFlapCard._g = frontFlapCard.g;
+        // 恢复下一张卡片颜色
+        backFlapCard._g = backFlapCard.g;
+        // 当前卡片旋转恢复
+        this.rotate(frontFlapCard, frontRightSemiCircle)
+        // 下一张卡片旋转恢复
+        this.rotate(backFlapCard, backLeftSemiCircle)
+        // 改变front和back的值
+        this.front++;
+        this.back++;
+        // 当超过值时重置front和back
+        if (this.front >= this.flapCardList.length) {
+          this.front = 0
+        }
+        if (this.back >= this.flapCardList.length) {
+          this.back = 0
+        }
+        // 获取卡片列表的长度，用于改变 zIndex 优先级
+        const len = this.flapCardList.length
+        // 这里实现了一个算法
+        // 比如当前为第一张卡片翻转：
+        // (0 - 0 + 5) % 5 = 0 ===> 100 - 0 = 100;
+        // (1 - 0 + 5) % 5 = 1 ===> 100 - 1 = 99;
+        // ......
+        // 依次类推
+        this.flapCardList.forEach((item, index) => {
+          item.zIndex = 100 - ((index - this.front + len) % len)
+        });
+        // 准备翻转
+        this.prepare();
       },
       semiCircleStyle(item, direction) {
         return {
@@ -291,7 +394,7 @@
     .close-btn-wrapper {
       position: absolute;
       left: 0;
-      bottom: px2rem(30);
+      bottom: px2rem(100);
       z-index: 1100;
       width: 100%;
       @include center;

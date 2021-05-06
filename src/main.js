@@ -5,8 +5,7 @@ import store from './store'
 import './assets/styles/icon.css'
 import './assets/styles/global.scss'
 import i18n from "./language";
-
-// Vue.config.productionTip = false
+import './mock'
 
 new Vue({
   router,

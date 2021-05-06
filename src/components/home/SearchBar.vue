@@ -54,7 +54,8 @@
       ifShowHotSearch: {
         type: Boolean,
         default: true
-      }
+      },
+      bookListOffsetY: Number
     },
     components: {
       HotSearch
@@ -164,11 +165,49 @@
       back() {
         alert("返回");
       },
-      showSearchPageAndHotSearch() {
-        alert('显示了图书列表');
+      // 搜索是展示列表页面
+      search() {
+        this.$router.push({
+          path: '/book-store/list',
+          query: {
+            keyword: this.searchText
+          }
+        })
       },
+      showSearchPageAndHotSearch() {
+        // 显示搜索页面 => 在BookHome.vue
+        this.showSearchPage();
+        // 隐藏阴影
+        this.hideShadow();
+        // 显示热门搜索 => 将ifShowHotSearch改为true
+        this.$emit('update:ifShowHotSearch', true)
+        // 所有DOM显示完毕初始化热门搜索
+        this.$nextTick(() => {
+          this.initHotSearch()
+        })
+      },
+      // 显示搜索页面
+      showSearchPage() {
+        this.$emit('update:ifShowSearchPage', true)
+      },
+      // 隐藏阴影
+      hideShadow() {
+        this.ifHideShadow = true
+      },
+      // 显示热门搜索界面
+      initHotSearch() {
+        if (this.$refs.searchMaskWrapper) {
+          // 显示的高度要减去上面搜索框的高度，要不然会覆盖
+          this.$refs.searchMaskWrapper.style.height = window.innerHeight - realPx(52) + 'px'
+          // 添加 scroll 滚动事件
+          this.$refs.searchMaskWrapper.addEventListener('scroll', this.handleScroll)
+          // 每次点击进入都会显示在顶部，所以这里scollTo为0,0位置
+          this.$refs.searchMaskWrapper.scrollTo(0, 0)
+        }
+      },
+      // 显示猜你喜欢盒子
       showFlapCard() {
-        alert("弹出选书盒子");
+        this.$emit('showFlapCard')
       },
     }
   }

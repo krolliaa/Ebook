@@ -2,8 +2,8 @@ import Storage from 'web-storage-cache';
 
 const localStorage = new Storage();
 
-export function setLocalStorage(key, value) {
-  return localStorage.set(key, value);
+export function setLocalStorage(key, value, expire = 30 * 24 * 3600) {
+  return localStorage.set(key, value, {exp: expire});
 }
 
 export function getLocalStorage(key) {
@@ -20,7 +20,6 @@ export function clearLocalStorage() {
 
 // 获取渲染的电子书
 export function setBookObject(fileName, key, value) {
-  // bookmark 到这里仍然有数据
   let book = getLocalStorage(`${fileName}-info`);
   // 如果该书没有任何设置，给予一个空对象，然后设置传入的 key
   if (!book) {
@@ -101,4 +100,13 @@ export function saveBookmark(fileName, bookmark) {
 
 export function getBookmark(fileName) {
   return getBookObject(fileName, 'bookmark');
+}
+
+// 书城首页
+export function getHome() {
+  return getLocalStorage('home')
+}
+
+export function saveHome(home) {
+  return setLocalStorage('home', home, 1800)
 }

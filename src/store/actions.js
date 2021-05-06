@@ -47,7 +47,15 @@ const actions = {
   setIsBookmark: ({commit, state}, isBookmark) => {
     return commit('SET_IS_BOOKMARK', isBookmark);
   },
-
+  setBookText: ({commit, state}, bookText) => {
+    return commit('SET_BOOK_TEXT', bookText);
+  },
+  setPaginate: ({commit, state}, paginate) => {
+    return commit('SET_PAGINATE', paginate);
+  },
+  setPageList: ({commit, state}, pageList) => {
+    return commit('SET_PAGE_LIST', pageList);
+  },
 }
 
 export default actions

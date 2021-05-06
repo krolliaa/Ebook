@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/ebook'
+    redirect: '/book-store'
   },
   {
     path: '/ebook',
@@ -19,6 +19,43 @@ const routes = [
       {
         path: ':fileName',
         component: () => import('../components/ebook/EbookReader.vue')
+      }
+    ]
+  },
+  {
+    path: '/book-store',
+    name: 'BookStore',
+    component: () => import('../views/store/index.vue'),
+    children: [
+      {
+        path: '/book-store/home',
+        component: () => import('../views/store/BookHome.vue'),
+        meta: {key: 3}
+      },
+      {
+        path: '/book-store/shelf',
+        component: () => import('../views/store/BookShelf.vue'),
+        meta: {key: 1}
+      },
+      {
+        path: '/book-store/category',
+        component: () => import('../views/store/BookCategory.vue'),
+        meta: {key: 2}
+      },
+      {
+        path: '/book-store/list',
+        component: () => import('../views/store/BookList.vue'),
+        meta: {key: 4}
+      },
+      {
+        path: '/book-store/detail',
+        component: () => import('../views/store/BookDetail.vue'),
+        meta: {key: 5}
+      },
+      {
+        path: '/book-store/book-speaking',
+        component: () => import('../views/store/BookSpeaking.vue'),
+        meta: {key: 6}
       }
     ]
   }

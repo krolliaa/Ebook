@@ -5,8 +5,9 @@
       <div class="slide-bookmark-item" v-for="(item, index) in bookmark" :key="index"
            @click="displayBookmark(item.cfi)">
         <div class="slide-bookmark-item-icon">
-          <div class="icon-bookmark"></div>
+          <div :class="{'icon-bookmark': isDisplayIcon(item.text)}"></div>
         </div>
+
         <div class="slide-bookmark-item-text">{{item.text}}</div>
       </div>
     </scroll>
@@ -34,8 +35,18 @@
         this.display(target, () => {
           this.hideTittleAndMenu()
         })
+      },
+      isDisplayIcon(itemText) {
+        // 通过结合getIsBookmark 和本地存储的标签判断是否显示图标
+        if (this.getIsBookmark) {
+          if (itemText == this.getBookText)
+            return true;
+        } else {
+          return false;
+        }
       }
-    },
+    }
+    ,
     mounted() {
       this.bookmark = getBookmark(this.getFileName);
     }

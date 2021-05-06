@@ -16,6 +16,9 @@ const book = {
     navigation: null, // 图书目录
     offsetY: 0, // 上下偏移量,
     isBookmark: false, // 当前页是否为书签页
+    bookText: null, // 当前页面的文字
+    paginate: '', // 分页信息
+    pageList: '', // 分页信息
   },
   mutations: {
     SET_FILENAME: (state, newFileName) => {
@@ -66,6 +69,15 @@ const book = {
     SET_IS_BOOKMARK: (state, isBookmark) => {
       state.isBookmark = isBookmark;
     },
+    SET_BOOK_TEXT: (state, bookText) => {
+      state.bookText = bookText;
+    },
+    SET_PAGINATE: (state, paginate) => {
+      state.paginate = paginate;
+    },
+    SET_PAGE_LIST: (state, pageList) => {
+      state.pageList = pageList;
+    }
   }
 }
 export default book;

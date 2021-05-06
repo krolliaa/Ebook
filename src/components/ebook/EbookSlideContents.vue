@@ -37,7 +37,7 @@
     <scroll class="slide-contents-list" :top="156" :bottom="48" v-show="!searchVisible">
       <div class="slide-contents-item" v-for="(item, index) in getNavigation" :key="index">
         <span class="slide-contents-item-label" :class="{'selected' : getSection === index}"
-              :style="contentItemStyle(item)" @click="displayContent(item.href, true)">{{item.label}}</span>
+              :style="contentItemStyle(item)" @click="displayContent(item.href)">{{item.label}}</span>
         <span class="slide-contents-item-page">{{item.page}}</span>
       </div>
     </scroll>
@@ -246,6 +246,11 @@
           font-size: px2rem(14);
           line-height: px2rem(16);
           @include ellipsis;
+
+          &.selected {
+            color: #346cb9;
+            font-weight: bold;
+          }
         }
 
         .slide-contents-item-page {

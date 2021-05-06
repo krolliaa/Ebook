@@ -33,21 +33,6 @@
   export default {
     name: "EbookSettingProgress",
     mixins: [ebookMixin],
-    computed: {
-      getSectionName() {
-        // if (this.getSection) {
-        //   if (this.getCurrentBook) {
-        //     const sectionInfo = this.getCurrentBook.section(this.getSection);
-        //     if (sectionInfo && sectionInfo.href && this.getCurrentBook.navigation) {
-        //       return this.getCurrentBook.navigation.get(sectionInfo.href).label;
-        //     }
-        //   }
-        // }
-        // return '';
-        return this.getNavigation && this.getSection ? this.getNavigation[this.getSection].label : '';
-      },
-
-    },
     updated() {
       this.updateProgressBg();
     },

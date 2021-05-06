@@ -150,7 +150,10 @@
         const cfiEnd = currentLocation.end.cfi.replace(/.*!/, '').replace(/\)$/, '');
         const cfiRange = `${cfiBase}!,${cfiStart},${cfiEnd})`;
         this.getCurrentBook.getRange(cfiRange).then(range => {
-          const text = range.toString().replace(/\s\s/g, '');
+          let text = range.toString().replace(/\s\s/g, '');
+          if (text.length === 1) {
+            text = "Cover";
+          }
           this.bookmark.push({
             cfi: currentLocation.start.cfi,
             text: text

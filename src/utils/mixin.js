@@ -20,11 +20,17 @@ export const ebookMixin = {
       'getMetadata',
       'getNavigation',
       'getOffsetY',
-      'getIsBookmark'
+      'getIsBookmark',
+      'getBookText',
+      'getPaginate',
+      'getPageList'
     ]),
     getThemeList() {
       return themeList(this);
-    }
+    },
+    getSectionName() {
+      return this.getNavigation && this.getSection ? this.getNavigation[this.getSection].label : '';
+    },
   },
   methods: {
     ...mapActions([
@@ -43,8 +49,12 @@ export const ebookMixin = {
       'setMetadata',
       'setNavigation',
       'setOffsetY',
-      'setIsBookmark'
+      'setIsBookmark',
+      'setBookText',
+      'setPaginate',
+      'setPageList'
     ]),
+    // 插入主题样式样式
     initGlobalStyle() {
       switch (this.getDefaultTheme) {
         case 'Default':
@@ -61,7 +71,6 @@ export const ebookMixin = {
           break;
       }
     },
-    removeAllCss,
     // refreshLocation 方法可以获取当前位置，并且更新进度条，最后将当前位置保存到本地存储中
     refreshLocation() {
       const currentLocation = this.getCurrentBook.rendition.currentLocation();
@@ -83,8 +92,31 @@ export const ebookMixin = {
         } else {
           this.setIsBookmark(false);
         }
+        const cfiBase = currentLocation.start.cfi.replace(/!.*/, '');
+        const cfiStart = currentLocation.start.cfi.replace(/.*!/, '').replace(/\)$/, '');
+        const cfiEnd = currentLocation.end.cfi.replace(/.*!/, '').replace(/\)$/, '');
+        const cfiRange = `${cfiBase}!,${cfiStart},${cfiEnd})`;
+        this.getCurrentBook.getRange(cfiRange).then(range => {
+          let text = range.toString().replace(/\s\s/g, '');
+          if (text.length === 1) {
+            text = "Cover";
+          }
+          this.setBookText(text);
+        });
+        if (this.getPageList) {
+          const totalPage = this.getPageList.length
+          const currentPage = currentLocation.start.location
+          if (currentPage && currentPage > 0) {
+            this.setPaginate(currentPage + ' / ' + totalPage)
+          } else {
+            this.setPaginate('')
+          }
+        } else {
+          this.setPaginate('')
+        }
       }
     },
+    // 渲染整个图书包括进度条等
     display(target, cb) {
       if (target) {
         this.getCurrentBook.rendition.display(target).then(() => {
@@ -104,6 +136,7 @@ export const ebookMixin = {
       this.setSettingVisible(-1);
       this.setFontFamilyPopUpVisible(false);
     },
+    // 获取阅读时间
     getReadTimeText() {
       return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(this.getFileName));
     },

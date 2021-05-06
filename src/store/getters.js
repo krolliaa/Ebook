@@ -46,6 +46,15 @@ const getters = {
   },
   getIsBookmark: state => {
     return state.book.isBookmark;
+  },
+  getBookText: state => {
+    return state.book.bookText;
+  },
+  getPaginate: state => {
+    return state.book.paginate;
+  },
+  getPageList: state => {
+    return state.book.pageList;
   }
 }
 

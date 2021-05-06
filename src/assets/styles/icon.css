@@ -42,6 +42,7 @@
 }
 .icon-bookmark:before {
   content: "\e905";
+  color: crimson;
 }
 .icon-bright:before {
   content: "\e906";

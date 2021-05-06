@@ -1,17 +1,21 @@
 <template>
   <div class="ebook" ref="ebook">
+    <ebook-header></ebook-header>
     <ebook-title></ebook-title>
     <ebook-reader></ebook-reader>
     <ebook-menu></ebook-menu>
     <ebook-bookmark></ebook-bookmark>
+    <ebook-footer></ebook-footer>
   </div>
 </template>
 
 <script>
+  import EbookHeader from "../../components/ebook/EbookHeader";
   import EbookReader from "../../components/ebook/EbookReader";
   import EbookTitle from "../../components/ebook/EbookTitle";
   import EbookMenu from "../../components/ebook/EbookMenu";
   import EbookBookmark from "../../components/ebook/EbookBookmark";
+  import EbookFooter from "../../components/ebook/EbookFooter";
   import {ebookMixin} from "../../utils/mixin";
   import {getReadTime, saveReadTime} from "../../utils/localStorage";
 
@@ -19,10 +23,12 @@
     name: "index",
     mixins: [ebookMixin],
     components: {
+      EbookHeader,
       EbookReader,
       EbookTitle,
       EbookMenu,
-      EbookBookmark
+      EbookBookmark,
+      EbookFooter
     },
     methods: {
       // 计时方法

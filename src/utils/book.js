@@ -1,6 +1,7 @@
 import {realPx} from "./utils";
 import {getReadTime} from "./localStorage";
 
+// 字号列表
 export const FONT_SIZE_LIST = [
   {fontSize: 12},
   {fontSize: 14},
@@ -11,6 +12,7 @@ export const FONT_SIZE_LIST = [
   {fontSize: 24}
 ]
 
+// 字体样式列表
 export const FONT_FAMILY = [
   {fontFamily: 'Default'},
   {fontFamily: 'Cabin'},
@@ -19,6 +21,7 @@ export const FONT_FAMILY = [
   {fontFamily: 'Tangerine'}
 ]
 
+// 主题列表
 export function themeList(vue) {
   return [
     {
@@ -93,6 +96,7 @@ export function removeCss(href) {
   }
 }
 
+// 移出所有CSS样式
 export function removeAllCss() {
   removeCss(`${process.env.VUE_APP_RES_URL}/theme/theme_default.css`);
   removeCss(`${process.env.VUE_APP_RES_URL}/theme/theme_eye.css`);

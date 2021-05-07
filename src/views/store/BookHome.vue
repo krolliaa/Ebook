@@ -16,9 +16,10 @@
       <!--猜你喜欢栏目-->
       <guess-you-like :data="guessYouLike" ref="guessYouLike"></guess-you-like>
       <!--热门推荐栏目-->
-      <recommend></recommend>
+      <recommend class="recommend" :data="recommend" ref="recommend"></recommend>
       <!--精选栏目-->
-      <featured></featured>
+      <featured class="featured" :data="featured" :titleText="$t('home.featured')" :btnText="$t('home.seeAll')"
+                ref="featured"></featured>
       <!--各学科图书栏目-->
       <div class="category-list-wrapper" v-for="(item, index) in categoryList" :key="index">
         <category-book :data="item"></category-book>
@@ -101,15 +102,16 @@
       this.$refs.bookListWrapper.addEventListener('scroll', this.handleBookListScroll)
       // 获取本地存储的偏移量
       this.bookListOffsetY = getLocalStorage('offsetY')
-
     },
     methods: {
       // 显示滚动条
       handleBookListScroll(e) {
         // 获取目标对象
         const target = e.target;
-        /*if (target) {
-          this.bookListOffsetY = target.scrollTop
+        if (target) {
+          // 获取偏移量
+          this.bookListOffsetY = target.scrollTop;
+          // 如果偏移量大于0
           if (target.scrollTop > 0) {
             if (this.$refs.searchBar) {
               this.$refs.searchBar.showSearchPage()
@@ -121,7 +123,7 @@
               this.$refs.searchBar.hideSearchPage()
             }
           }
-        }*/
+        }
       },
       // 随机推荐栏目核心方法
       showFlapCard() {
@@ -170,6 +172,13 @@
       },
       onBack() {
         this.isBack = true
+      },
+      beforeDestroy() {
+        if (this.bookListOffsetY && !this.isBack) {
+          setLocalStorage('offsetY', this.bookListOffsetY)
+        } else {
+          setLocalStorage('offsetY', 0);
+        }
       }
     }
   }
@@ -185,22 +194,18 @@
     background: #fff;
     font-size: px2rem(16);
     color: #666;
-
     .book-list-wrapper {
       width: 100%;
       overflow-x: hidden;
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
-
       &::-webkit-scrollbar {
         display: none;
       }
-
       .banner-wrapper {
         width: 100%;
         padding: px2rem(10);
         box-sizing: border-box;
-
         .banner {
           width: 100%;
           height: px2rem(150);
@@ -208,19 +213,15 @@
           background-size: 100% 100%;
         }
       }
-
       .recommend {
         margin-top: px2rem(20);
       }
-
       .featured {
         margin-top: px2rem(20);
       }
-
       .category-list-wrapper {
         margin-top: px2rem(20);
       }
-
       .category {
         margin-top: px2rem(20);
       }

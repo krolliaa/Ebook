@@ -166,6 +166,38 @@
         this.searchText = keyword
         this.searchList.historySearch.push(keyword)
       },
+      // 搜索是展示列表页面
+      search() {
+        this.$router.push({
+          path: '/book-store/list',
+          query: {
+            keyword: this.searchText
+          }
+        })
+      },
+      hideHotSearch() {
+        this.$emit('update:ifShowHotSearch', false)
+      },
+      // 显示阴影
+      showShadow() {
+        this.ifHideShadow = false
+      },
+      // 隐藏阴影
+      hideShadow() {
+        this.ifHideShadow = true
+      },
+      showSearchPageAndHotSearch() {
+        // 显示搜索页面 => 在BookHome.vue
+        this.showSearchPage();
+        // 隐藏阴影
+        this.hideShadow();
+        // 显示热门搜索 => 将ifShowHotSearch改为true
+        this.$emit('update:ifShowHotSearch', true)
+        // 所有DOM显示完毕初始化热门搜索
+        this.$nextTick(() => {
+          this.initHotSearch()
+        })
+      },
       back() {
         // 设置问文框内容为空
         this.searchText = '';
@@ -192,41 +224,29 @@
         }
         this.$emit('back')
       },
-      // 搜索是展示列表页面
-      search() {
-        this.$router.push({
-          path: '/book-store/list',
-          query: {
-            keyword: this.searchText
-          }
-        })
-      },
-      hideHotSearch() {
-        this.$emit('update:ifShowHotSearch', false)
-      },
-      showSearchPageAndHotSearch() {
-        // 显示搜索页面 => 在BookHome.vue
-        this.showSearchPage();
-        // 隐藏阴影
-        this.hideShadow();
-        // 显示热门搜索 => 将ifShowHotSearch改为true
-        this.$emit('update:ifShowHotSearch', true)
-        // 所有DOM显示完毕初始化热门搜索
-        this.$nextTick(() => {
-          this.initHotSearch()
-        })
+      // 隐藏搜索页面
+      hideSearchPage() {
+        this.$emit('update:ifShowSearchPage', false)
+        this.ifHideShadow = true
       },
       // 显示搜索页面
       showSearchPage() {
         this.$emit('update:ifShowSearchPage', true)
       },
-      // 显示阴影
-      showShadow() {
-        this.ifHideShadow = false
+      // 显示自动推荐盒子
+      showFlapCard() {
+        this.$emit('showFlapCard')
       },
-      // 隐藏阴影
-      hideShadow() {
-        this.ifHideShadow = true
+      // 处理滚动条
+      handleScroll(e) {
+        const target = e.target
+        if (target) {
+          if (target.scrollTop > 0) {
+            this.ifHideShadow = false
+          } else {
+            this.ifHideShadow = true
+          }
+        }
       },
       // 显示热门搜索界面
       initHotSearch() {
@@ -238,10 +258,6 @@
           // 每次点击进入都会显示在顶部，所以这里scollTo为0,0位置
           this.$refs.searchMaskWrapper.scrollTo(0, 0)
         }
-      },
-      // 显示猜你喜欢盒子
-      showFlapCard() {
-        this.$emit('showFlapCard')
       },
     }
   }

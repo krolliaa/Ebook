@@ -95,7 +95,7 @@
           }
         }
       },
-      // 重置宽度
+      // 重置宽度大小
       resize() {
         this.$nextTick(() => {
           this.$refs.title.forEach(item => {
@@ -121,38 +121,29 @@
       width: 100%;
       padding: 0 px2rem(10);
       box-sizing: border-box;
-
       .guess-you-like-item {
         display: flex;
         margin-top: px2rem(15);
-
         &:first-child {
           margin-top: px2rem(5);
         }
-
         .img-wrapper {
           flex: 0 0 20%;
           padding: px2rem(10) px2rem(10) px2rem(10) 0;
           box-sizing: border-box;
-
           .img {
             width: 100%;
           }
         }
-
         .content-wrapper {
           flex: 1;
           padding: px2rem(10) 0;
           box-sizing: border-box;
-          font-size: px2rem(15);
-
           .author {
             margin-top: px2rem(15);
           }
-
           .result {
-            font-size: px2rem(11);
-            margin-top: px2rem(15);
+            margin-top: px2rem(5);
           }
         }
       }

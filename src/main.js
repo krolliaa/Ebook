@@ -6,6 +6,7 @@ import './assets/styles/icon.css'
 import './assets/styles/global.scss'
 import i18n from "./language";
 import './mock'
+import './utils/lazy'
 
 new Vue({
   router,

@@ -146,6 +146,7 @@
       onBack() {
         this.isBack = true
       },
+      // 关闭自动推荐
       closeFlapCard() {
         this.$refs.flapCard.stopAnimation();
         this.ifFlapCardShow = false;

@@ -20,7 +20,7 @@
         </div>
         <div class="text-wrapper">
           <span class="progress-section-text">{{getSectionName}}</span>
-          <span>({{getBookAvailable ? getProgress + '%' : '加载中...'}})</span>
+          <span>({{getBookAvailable ? getProgress + '%' : $t('book.loading')}})</span>
         </div>
       </div>
     </div>

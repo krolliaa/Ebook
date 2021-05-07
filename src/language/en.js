@@ -17,7 +17,7 @@ const messages = {
     category: 'Category',
     books: 'books',
     readNow: 'Read Now',
-    allBook: '$1 books'
+    allBook: '$1 books',
   },
   category: {
     computerScience: 'Computer Science',

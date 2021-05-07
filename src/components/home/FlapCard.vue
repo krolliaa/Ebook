@@ -1,17 +1,43 @@
 <template>
   <!--随机推荐栏目-->
   <div class="flap-card-wrapper">
-
-    <!--设置是否显示动画卡片，当加载到图书就不显示-->
-    <div class="flap-card-bg" v-if="ifShowFlapCard">
+    <!--是否显示动画取决于runFlapCardAnimation-->
+    <div class="flap-card-bg" :class="{'animation': runFlapCardAnimation}" v-if="ifShowFlapCard">
+      <!--设置是否显示动画卡片，当加载到图书就不显示-->
       <div class="flap-card" v-for="(item, index) in flapCardList" :key="index" :style="{zIndex: item.zIndex}">
         <div class="flap-card-semi-circle">
           <div class="flap-card-semi-circle-left" :style="semiCircleStyle(item, 'left')" ref="left"></div>
           <div class="flap-card-semi-circle-right" :style="semiCircleStyle(item, 'right')" ref="right"></div>
         </div>
       </div>
+      <!--设置小球散布：flapCard.scss-->
+      <div class="point-wrapper" v-if="ifShowPoint">
+        <div class="point" :class="{'animation': runPointAnimation}" v-for="(item, index) in pointList"
+             :key="index"></div>
+      </div>
     </div>
-
+    <!--设置推荐出书籍-->
+    <!--runBookCardAnimation决定是否显示动画效果，ifShowBookCard决定是否显示图书-->
+    <div class="book-card" :class="{'animation': runBookCardAnimation}" v-if="ifShowBookCard">
+      <div class="book-card-wrapper">
+        <!--数据data是从BookHome.vue的random传递过来的，random是随机挑选的一本书-->
+        <!--显示图书封面-->
+        <div class="img-wrapper">
+          <!--图片懒加载，视野区优先加载，使页面更加流畅-->
+          <img class="img" v-lazy="data.cover">
+        </div>
+        <!--显示图书内容-->
+        <div class="content-wrapper">
+          <!--所属书名-->
+          <div class="title">{{data.title}}</div>
+          <!--所属作者-->
+          <div class="author sub-title-medium">{{data.author}}</div>
+          <!--所属学科-->
+          <div class="category">{{categoryText()}}</div>
+        </div>
+        <!--        <div class="read-btn" @click.stop="showBookDetail">{{$t('home.readNow')}}</div>-->
+      </div>
+    </div>
     <!--设置关闭按钮-->
     <div class="close-btn-wrapper" @click="close">
       <span class="icon-close"></span>
@@ -20,8 +46,13 @@
 </template>
 
 <script>
+  import {categoryText} from "../../utils/book";
+
   export default {
     name: "FlapCard",
+    props: {
+      data: Object
+    },
     data() {
       return {
         pointList: [],
@@ -93,28 +124,55 @@
         ifShowPoint: true
       }
     },
+    created() {
+      // 创建 18 个小球
+      for (let i = 0; i < 18; i++) {
+        this.pointList.push({})
+      }
+    },
     methods: {
+      categoryText() {
+        return categoryText(this.data.category, this)
+      },
       close() {
         this.$emit('close')
       },
       startAnimation() {
         // 将runFlapCardAnimation设为true表示需要开始动画
+        this.runFlapCardAnimation = true;
+        // 显示卡片翻转
         setTimeout(() => {
           this.startFlapCardAnimation();
         }, 300);
-        console.log("实现了动画效果");
+        // 弹出小球
+        setTimeout(() => {
+          this.startPointAnimation()
+        }, 300);
+        // 隐藏动画，显示推荐的书籍
+        setTimeout(() => {
+          this.stopAnimation()
+          this.showBookCard()
+        }, 2500)
       },
+      // 停止动画
       stopAnimation() {
-        console.log("关闭了动画效果");
+        // 清除定时器任务 卡片任务
+        clearInterval(this.task);
+        // 停止卡片动画
+        this.runFlapCardAnimation = false
+        // 停止弹出小球动画
+        this.runPointAnimation = false
       },
+      // 开启卡片显示的动画 循环播放，直至图书加载完成【这里用2.5s模拟加载过程】
       startFlapCardAnimation() {
         // 做一些动画前的准备，这里封装成了prepare()方法
         this.prepare();
         // 开启定时任务开始旋转
         this.task = setInterval(() => {
           this.rotateSemiCircle()
-        }, 300)
+        }, this.intervalTime)
       },
+      // 旋转前的准备
       prepare() {
         // // 获取下一个动画卡片，起始时下一张卡片index默认为 1
         const backFlapCard = this.flapCardList[this.back];
@@ -130,10 +188,10 @@
       // 实现旋转 => 增加样式
       rotate(item, dom) {
         dom.style.transform = `rotateY(${item.rotateDegree}deg)`;
-        dom.style.backgroundColor = `rgb(${item.r} ,${item._g} ,${item.b})`
+        dom.style.backgroundColor = `rgb(${item.r} ,${item._g} ,${item.b})`;
       },
+      // 旋转
       rotateSemiCircle() {
-        console.log("旋转中");
         // 获取当前卡片
         const frontFlapCard = this.flapCardList[this.front];
         // 获取下一张卡片
@@ -148,15 +206,15 @@
         backFlapCard.rotateDegree -= 10;
         // 当前卡片右半部分颜色加深
         if (frontFlapCard.rotateDegree < 90) {
-          frontFlapCard._g -= 5
+          frontFlapCard._g -= 5;
         }
         // 下一张卡片左半部分颜色变浅
         if (backFlapCard.rotateDegree < 90) {
-          backFlapCard._g += 5
+          backFlapCard._g += 5;
         }
         // 如果垂直了，下一张卡片的 zIndex 要增加
         if (frontFlapCard.rotateDegree === 90 && backFlapCard.rotateDegree === 90) {
-          backFlapCard.zIndex += 2
+          backFlapCard.zIndex += 2;
         }
         // 当前卡片右半实现翻动效果
         this.rotate(frontFlapCard, frontRightSemiCircle);
@@ -185,21 +243,21 @@
         // 恢复下一张卡片颜色
         backFlapCard._g = backFlapCard.g;
         // 当前卡片旋转恢复
-        this.rotate(frontFlapCard, frontRightSemiCircle)
+        this.rotate(frontFlapCard, frontRightSemiCircle);
         // 下一张卡片旋转恢复
-        this.rotate(backFlapCard, backLeftSemiCircle)
+        this.rotate(backFlapCard, backLeftSemiCircle);
         // 改变front和back的值
         this.front++;
         this.back++;
         // 当超过值时重置front和back
         if (this.front >= this.flapCardList.length) {
-          this.front = 0
+          this.front = 0;
         }
         if (this.back >= this.flapCardList.length) {
-          this.back = 0
+          this.back = 0;
         }
         // 获取卡片列表的长度，用于改变 zIndex 优先级
-        const len = this.flapCardList.length
+        const len = this.flapCardList.length;
         // 这里实现了一个算法
         // 比如当前为第一张卡片翻转：
         // (0 - 0 + 5) % 5 = 0 ===> 100 - 0 = 100;
@@ -207,11 +265,26 @@
         // ......
         // 依次类推
         this.flapCardList.forEach((item, index) => {
-          item.zIndex = 100 - ((index - this.front + len) % len)
+          item.zIndex = 100 - ((index - this.front + len) % len);
         });
         // 准备翻转
         this.prepare();
       },
+      // 显示推荐书籍
+      showBookCard() {
+        this.ifShowBookCard = true
+        this.runBookCardAnimation = true
+        this.ifShowFlapCard = false
+        this.ifShowPoint = false
+      },
+      // 弹出小球
+      startPointAnimation() {
+        this.runPointAnimation = true
+        setTimeout(() => {
+          this.runPointAnimation = false
+        }, 750)
+      },
+      // 添加卡片样式
       semiCircleStyle(item, direction) {
         return {
           backgroundColor: `rgb(${item.r} ,${item.g} ,${item.b})`,
@@ -244,8 +317,8 @@
       height: px2rem(64);
       background: white;
       border-radius: px2rem(5);
-      /*transform: scale(0);*/
-      /*opacity: 0;*/
+      transform: scale(0);
+      opacity: 0;
 
       &.animation {
         animation: scale .3s ease-in both;
@@ -319,12 +392,21 @@
           z-index: 3000;
           border-radius: 50%;
           transform: scale(0);
+
+          &.animation {
+            @for $i from 1 to length($moves) + 1 {
+              &:nth-child(#{$i}) {
+                @include move($i);
+              }
+            }
+          }
         }
       }
     }
 
     .book-card {
       position: relative;
+      bottom: px2rem(15);
       width: 65%;
       // height: 70%;
       box-sizing: border-box;
@@ -388,13 +470,27 @@
             text-align: center;
           }
         }
+
+        .read-btn {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          z-index: 1100;
+          width: 100%;
+          border-radius: 0 0 px2rem(15) px2rem(15);
+          padding: px2rem(15) 0;
+          text-align: center;
+          color: white;
+          font-size: px2rem(14);
+          background: $color-blue;
+        }
       }
     }
 
     .close-btn-wrapper {
       position: absolute;
       left: 0;
-      bottom: px2rem(100);
+      bottom: px2rem(80);
       z-index: 1100;
       width: 100%;
       @include center;

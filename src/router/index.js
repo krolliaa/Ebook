@@ -25,6 +25,7 @@ const routes = [
   {
     path: '/book-store',
     name: 'BookStore',
+    redirect: '/book-store/home',
     component: () => import('../views/store/index.vue'),
     children: [
       {
@@ -35,11 +36,13 @@ const routes = [
       {
         path: '/book-store/shelf',
         component: () => import('../views/store/BookShelf.vue'),
+        // 一进来就是书架，书架是第一页
         meta: {key: 1}
       },
       {
         path: '/book-store/category',
         component: () => import('../views/store/BookCategory.vue'),
+        //
         meta: {key: 2}
       },
       {

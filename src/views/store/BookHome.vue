@@ -2,8 +2,8 @@
   <div class="book-home">
     <search-bar
       @showFlapCard="showFlapCard"
-      :ifShowSearchPage="ifShowSearchPage"
-      :ifShowHotSearch="ifShowHotSearch"
+      :ifShowSearchPage.sync="ifShowSearchPage"
+      :ifShowHotSearch.sync="ifShowHotSearch"
       :bookListOffsetY="bookListOffsetY"
       @back="onBack"
       ref="searchBar"></search-bar>
@@ -25,7 +25,7 @@
         <category-book :data="item"></category-book>
       </div>
       <!--分类栏目-->
-      <category></category>
+      <category class="category" :data="categories"></category>
     </div>
     <!--随机推荐栏目-->
     <!--
@@ -99,9 +99,9 @@
       // 设置bookListWrapper DOM 的高度
       this.$refs.bookListWrapper.style.height = window.innerHeight - realPx(52) + 'px';
       // 设置滚动条
-      this.$refs.bookListWrapper.addEventListener('scroll', this.handleBookListScroll)
+      this.$refs.bookListWrapper.addEventListener('scroll', this.handleBookListScroll);
       // 获取本地存储的偏移量
-      this.bookListOffsetY = getLocalStorage('offsetY')
+      this.bookListOffsetY = getLocalStorage('offsetY');
     },
     methods: {
       // 显示滚动条
@@ -113,9 +113,10 @@
           this.bookListOffsetY = target.scrollTop;
           // 如果偏移量大于0
           if (target.scrollTop > 0) {
+            // 设置搜索框置顶
             if (this.$refs.searchBar) {
-              this.$refs.searchBar.showSearchPage()
-              this.$refs.searchBar.showShadow()
+              this.$refs.searchBar.showSearchPage();
+              this.$refs.searchBar.showShadow();
               this.ifShowHotSearch = false
             }
           } else {
@@ -170,15 +171,25 @@
         this.$refs.flapCard.stopAnimation();
         this.ifFlapCardShow = false;
       },
+      // 返回
       onBack() {
         this.isBack = true
       },
-      beforeDestroy() {
-        if (this.bookListOffsetY && !this.isBack) {
-          setLocalStorage('offsetY', this.bookListOffsetY)
-        } else {
-          setLocalStorage('offsetY', 0);
-        }
+    },
+    // 现在可以不需要 beforeRouteEnter 钩子，因为现在一进来就是书城首页
+    // beforeRouteEnter(to, from, next) {
+    //   next(vm => {
+    //     if (from.path === '/book-store/list' && from.query.keyword) {
+    //       vm.ifShowSearchPage = true
+    //       vm.$refs.searchBar.setKeyword(from.query.keyword)
+    //     }
+    //   })
+    // },
+    beforeDestroy() {
+      if (this.bookListOffsetY && !this.isBack) {
+        setLocalStorage('offsetY', this.bookListOffsetY)
+      } else {
+        setLocalStorage('offsetY', 0);
       }
     }
   }
@@ -194,18 +205,22 @@
     background: #fff;
     font-size: px2rem(16);
     color: #666;
+
     .book-list-wrapper {
       width: 100%;
       overflow-x: hidden;
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
+
       &::-webkit-scrollbar {
         display: none;
       }
+
       .banner-wrapper {
         width: 100%;
         padding: px2rem(10);
         box-sizing: border-box;
+
         .banner {
           width: 100%;
           height: px2rem(150);
@@ -213,15 +228,19 @@
           background-size: 100% 100%;
         }
       }
+
       .recommend {
         margin-top: px2rem(20);
       }
+
       .featured {
         margin-top: px2rem(20);
       }
+
       .category-list-wrapper {
         margin-top: px2rem(20);
       }
+
       .category {
         margin-top: px2rem(20);
       }

@@ -231,7 +231,7 @@
       },
       // 显示搜索页面
       showSearchPage() {
-        this.$emit('update:ifShowSearchPage', true)
+        this.$emit('update:ifShowSearchPage', true);
       },
       // 显示自动推荐盒子
       showFlapCard() {

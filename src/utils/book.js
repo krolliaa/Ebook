@@ -169,3 +169,16 @@ export function categoryText(category, vue) {
       return vue.$t('category.statistics')
   }
 }
+
+// 跳转至图书详情页
+export function showBookDetail(vue, book) {
+  vue.$router.push({
+    // 跳转路径
+    path: '/book-store/detail',
+    // 获取文件名和目录
+    query: {
+      fileName: book.fileName,
+      category: book.categoryText
+    }
+  })
+}

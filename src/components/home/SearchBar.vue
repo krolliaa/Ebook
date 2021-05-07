@@ -162,8 +162,35 @@
       }
     },
     methods: {
+      setKeyword(keyword) {
+        this.searchText = keyword
+        this.searchList.historySearch.push(keyword)
+      },
       back() {
-        alert("返回");
+        // 设置问文框内容为空
+        this.searchText = '';
+        // 如果显示了搜索展示的页面
+        if (this.ifShowSearchPage) {
+          // 将滚动条至上，回到原来位置
+          if (this.bookListOffsetY <= 0) {
+            // 隐藏搜索展示的页面
+            this.hideSearchPage();
+          } else {
+            // 如果显示了热门搜索
+            if (this.ifShowHotSearch) {
+              // 隐藏热门搜索
+              this.hideHotSearch();
+              // 隐藏阴影
+              this.showShadow()
+            } else {
+              // 否则什么都没显示回到书架
+              this.$router.push('/book-store/shelf')
+            }
+          }
+        } else {
+          this.$router.push('/book-store/shelf')
+        }
+        this.$emit('back')
       },
       // 搜索是展示列表页面
       search() {
@@ -173,6 +200,9 @@
             keyword: this.searchText
           }
         })
+      },
+      hideHotSearch() {
+        this.$emit('update:ifShowHotSearch', false)
       },
       showSearchPageAndHotSearch() {
         // 显示搜索页面 => 在BookHome.vue
@@ -189,6 +219,10 @@
       // 显示搜索页面
       showSearchPage() {
         this.$emit('update:ifShowSearchPage', true)
+      },
+      // 显示阴影
+      showShadow() {
+        this.ifHideShadow = false
       },
       // 隐藏阴影
       hideShadow() {

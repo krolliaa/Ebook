@@ -9,7 +9,7 @@ const messages = {
     historySearch: '搜索历史',
     sameAuthor: '与$1同作者',
     sameReader: '对$1感兴趣的人也在读',
-    readPercent: '阅读$2的人，$1都在读',
+    readPercent: '阅读本书的人，$1都在读$2',
     recommend: '热门推荐',
     seeAll: '查看全部',
     readers: '$1人同时在读',

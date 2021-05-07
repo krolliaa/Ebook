@@ -35,7 +35,8 @@
           <!--所属学科-->
           <div class="category">{{categoryText()}}</div>
         </div>
-        <!--        <div class="read-btn" @click.stop="showBookDetail">{{$t('home.readNow')}}</div>-->
+        <!--立即阅读，显示图书详情-->
+        <div class="read-btn" @click.stop="showBookDetail">{{$t('home.readNow')}}</div>
       </div>
     </div>
     <!--设置关闭按钮-->
@@ -46,7 +47,7 @@
 </template>
 
 <script>
-  import {categoryText} from "../../utils/book";
+  import {categoryText, showBookDetail} from "../../utils/book";
 
   export default {
     name: "FlapCard",
@@ -131,6 +132,14 @@
       }
     },
     methods: {
+      showBookDetail() {
+        // 显示图书细节 => 跳转到图书详情页面
+        alert("阅读细节完成！");
+        console.log(this.data);
+        if (this.data) {
+          showBookDetail(this, this.data);
+        }
+      },
       categoryText() {
         return categoryText(this.data.category, this)
       },

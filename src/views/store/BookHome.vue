@@ -14,7 +14,7 @@
         <div class="banner" :style="bannerStyle"></div>
       </div>
       <!--猜你喜欢栏目-->
-      <guess-you-like></guess-you-like>
+      <guess-you-like :data="guessYouLike" ref="guessYouLike"></guess-you-like>
       <!--热门推荐栏目-->
       <recommend></recommend>
       <!--精选栏目-->
@@ -104,6 +104,25 @@
 
     },
     methods: {
+      // 显示滚动条
+      handleBookListScroll(e) {
+        // 获取目标对象
+        const target = e.target;
+        /*if (target) {
+          this.bookListOffsetY = target.scrollTop
+          if (target.scrollTop > 0) {
+            if (this.$refs.searchBar) {
+              this.$refs.searchBar.showSearchPage()
+              this.$refs.searchBar.showShadow()
+              this.ifShowHotSearch = false
+            }
+          } else {
+            if (this.$refs.searchBar) {
+              this.$refs.searchBar.hideSearchPage()
+            }
+          }
+        }*/
+      },
       // 随机推荐栏目核心方法
       showFlapCard() {
         // 将ifFlapCardShow设为true
@@ -118,6 +137,7 @@
           this.$refs.flapCard.startAnimation()
         })
       },
+      // 获取全部栏目信息 => data
       parseHomeData(data) {
         this.data = data;
         // 获取猜你喜欢栏目的图书信息
@@ -143,13 +163,13 @@
           }
         });
       },
-      onBack() {
-        this.isBack = true
-      },
       // 关闭自动推荐
       closeFlapCard() {
         this.$refs.flapCard.stopAnimation();
         this.ifFlapCardShow = false;
+      },
+      onBack() {
+        this.isBack = true
       }
     }
   }

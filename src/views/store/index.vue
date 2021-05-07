@@ -16,9 +16,13 @@
 
 <script>
   import {os} from '../../utils/utils.js'
+  import {clearLocalStorage} from "../../utils/localStorage";
 
   export default {
     name: "index",
+    mounted() {
+      clearLocalStorage();
+    },
     data() {
       return {
         transitionName: ''

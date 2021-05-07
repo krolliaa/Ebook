@@ -8,3 +8,21 @@ export function home2() {
     url: `${process.env.VUE_APP_BOOK_URL}/book/home`
   })
 }
+
+export function detail(book) {
+  return axios({
+    method: 'get',
+    url: `${process.env.VUE_APP_BOOK_URL}/book/detail`,
+    params: {
+      fileName: book.fileName
+    }
+  })
+}
+
+export function flatList() {
+  return axios({
+    method: 'get',
+    url: `${process.env.VUE_APP_BOOK_URL}/book/flat-list`
+  })
+}
+

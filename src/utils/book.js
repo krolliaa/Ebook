@@ -2,6 +2,8 @@ import {realPx} from "./utils";
 import {getReadTime} from "./localStorage";
 import {setLocalStorage, getLocalStorage} from "./localStorage";
 
+const BOOK_SHELF_KEY = 'bookShelf';
+
 // 字号列表
 export const FONT_SIZE_LIST = [
   {fontSize: 12},
@@ -234,18 +236,59 @@ export function getCategoryName(id) {
   }
 }
 
-// 清除缓存
+// 将本书从书架中移除
 export function removeFromBookShelf(bookItem) {
+  // 获取本地存储的书架数据
   let bookList = getLocalStorage(BOOK_SHELF_KEY)
+  // 遍历整个bookList
   bookList = bookList.filter(item => {
     if (item.itemList) {
-      item.itemList = item.itemList.filter(subItem => subItem.fileName !== bookItem.fileName)
+      item.itemList = item.itemList.filter(subItem => subItem.fileName !== bookItem.fileName);
     }
-    return item.fileName !== bookItem.fileName
-  })
+    return item.fileName !== bookItem.fileName;
+  });
+  // 将数据存储到本地
   setLocalStorage(BOOK_SHELF_KEY, bookList)
 }
 
+// 将本书添加至书架
+export function addToShelf(book) {
+  // 获取本地存储的书架数据
+  let bookList = getLocalStorage(BOOK_SHELF_KEY);
+  // 获取除了添加模块的其它所有在书架上的书
+  bookList = clearAddFromBookList(bookList);
+  // 类型为默认
+  book.type = 1;
+  // 添加至书架
+  bookList.push(book);
+  // 将书架中的id全部改动，不要0
+  bookList.forEach((item, index) => {
+    item.id = index + 1;
+  });
+  // 添加最后添加的模块 类型为 3
+  appendAddToBookList(bookList);
+  // 存储至本地
+  setLocalStorage(BOOK_SHELF_KEY, bookList);
+}
+
+// 获取除了添加模块的其它所有在书架上的书
+export function clearAddFromBookList(bookList) {
+  return bookList.filter(item => {
+    return item.type !== 3
+  });
+}
+
+// 添加最后添加的模块
+export function appendAddToBookList(bookList) {
+  bookList.push({
+    cover: '',
+    title: '',
+    type: 3,
+    id: Number.MAX_SAFE_INTEGER
+  })
+}
+
+// 中英文切换
 export function switchLocale(vue) {
   if (vue.$i18n.locale === 'en') {
     vue.$i18n.locale = 'cn'
@@ -255,9 +298,46 @@ export function switchLocale(vue) {
   setLocalStorage('locale', vue.$i18n.locale)
 }
 
+// 重置
 export function reset(vue) {
   vue.$store.dispatch('setMenuVisible', false)
   vue.$store.dispatch('setSettingVisible', 0)
   vue.$store.dispatch('setFontFamilyVisible', false)
   vue.$store.dispatch('setSpeakingIconBottom', realPx(58))
+}
+
+// 扁平化bookList => 用于在点击了搜索框
+export function flatBookList(bookList) {
+  // 如果 bookList 存在
+  if (bookList) {
+    // 获取默认图书和分组
+    let orgBookList = bookList.filter(item => {
+      return item.type !== 3
+    });
+    // 获取分组
+    const categoryList = bookList.filter(item => {
+      return item.type === 2
+    })
+    // 对分组进行遍历获取默认图书id，赋予 index
+    categoryList.forEach(item => {
+      // 获取 index
+      const index = orgBookList.findIndex(v => {
+        return v.id === item.id
+      });
+      // 把
+      if (item.itemList) {
+        item.itemList.forEach(subItem => {
+          // 将分组里的图书插入到orgBookList
+          orgBookList.splice(index, 0, subItem)
+        })
+      }
+    })
+    orgBookList.forEach((item, index) => {
+      item.id = index + 1
+    })
+    orgBookList = orgBookList.filter(item => item.type !== 2)
+    return orgBookList
+  } else {
+    return []
+  }
 }

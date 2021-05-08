@@ -44,6 +44,8 @@ const messages = {
     statistics: 'Statistics'
   },
   shelf: {
+    welcome: '<br>--------  Author: Krolliaa  --------',
+    find: 'Go!',
     title: 'Book Shelf',
     edit: 'Edit',
     cancel: 'Cancel',

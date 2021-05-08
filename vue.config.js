@@ -1,6 +1,6 @@
 function mock(app, url, data) {
   app.get(url, (request, response) => {
-    response.json(data)
+    response.json(data);
   })
 }
 const mockBookHomeData = require('./src/mock/bookHome')

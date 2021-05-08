@@ -44,6 +44,8 @@ const messages = {
     statistics: '统计学'
   },
   shelf: {
+    welcome: '<br>--------  作者：Krolliaa  --------',
+    find: '走起！',
     title: '书架',
     edit: '编辑',
     cancel: '取消',

@@ -25,7 +25,7 @@ const routes = [
   {
     path: '/book-store',
     name: 'BookStore',
-    redirect: '/book-store/home',
+    redirect: '/book-store/shelf',
     component: () => import('../views/store/index.vue'),
     children: [
       {

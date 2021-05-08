@@ -83,6 +83,7 @@
   import {px2rem, realPx} from "../../utils/utils";
   import {getLocalStorage} from "../../utils/localStorage";
   import {getLocalForage} from "../../utils/localForage";
+  import {removeFromBookShelf, addToShelf} from "../../utils/book";
   import Epub from 'epubjs';
 
   global.ePub = Epub;
@@ -107,9 +108,9 @@
       // 详情
       desc() {
         if (this.description) {
-          return this.description.substring(0, 100)
+          return this.description.substring(0, 100);
         } else {
-          return ''
+          return '';
         }
       },
       // 出版社
@@ -129,21 +130,24 @@
         if (this.navigation) {
           return Array.prototype.concat.apply([], Array.prototype.concat.apply([], this.doFlatNavigation(this.navigation.toc)));
         } else {
-          return []
+          return [];
         }
       },
       // 加入书架
       inBookShelf() {
-        return false;
-        // if (this.bookItem && this.bookShelf) {
-        //   const flatShelf = (function flatten(arr) {
-        //     return [].concat(...arr.map(v => v.itemList ? [v, ...flatten(v.itemList)] : v));
-        //   })(this.bookShelf).filter(item => item.type === 1)
-        //   const book = flatShelf.filter(item => item.fileName === this.bookItem.fileName);
-        //   return book && book.length > 0;
-        // } else {
-        //   return false;
-        // }
+        // 如果该书存在且书架存在
+        if (this.bookItem && this.bookShelf) {
+          // 返回类型为 1 的书
+          const flatShelf = (function flatten(arr) {
+            return [].concat(...arr.map(v => v.itemList ? [v, ...flatten(v.itemList)] : v));
+          })(this.bookShelf).filter(item => item.type === 1);
+          // 获取书籍
+          const book = flatShelf.filter(item => item.fileName === this.bookItem.fileName);
+          // 如果书存在且书的长度大于 0 返回真，说明书架上有该本书
+          return book && book.length > 0;
+        } else {
+          return false;
+        }
       }
     },
     data() {
@@ -360,9 +364,16 @@
           }
         })
       },
-      // 是否添加进书架
+      // 添加进书架 + 移出书架功能
       addOrRemoveShelf() {
-        alert("添加成功");
+        if (this.inBookShelf) {
+          // 如果已经在书架里就移除
+          removeFromBookShelf(this.bookItem);
+        } else {
+          // 如果不在书架里就添加
+          addToShelf(this.bookItem);
+        }
+        this.bookShelf = getLocalStorage('bookShelf');
       }
     }
   }

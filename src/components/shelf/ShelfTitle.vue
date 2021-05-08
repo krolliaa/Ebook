@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class="shelf-title-wrapper" :class="{'hide-shadow': ifHideShadow}">
       <div class="title">
-        <span class="title-text">书架</span>
+        <span class="title-text">{{title}}</span>
         <span class="sub-title-text" v-show="isEditMode">{{selectedText}}</span>
       </div>
       <div class="btn-text-wrapper" @click="onEditClick">
@@ -27,7 +27,8 @@
       isEditMode: Boolean,
       isShowBack: Boolean,
       ifShowClear: Boolean,
-      data: Array
+      data: Array,
+      title: String
     },
     components: {},
     computed: {

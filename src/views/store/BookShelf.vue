@@ -41,10 +41,10 @@
       <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
       <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
       <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
-<!--      <shelf class="book-shelf-list"-->
-<!--                  :data="bookList"-->
-<!--                  :isEditMode="isEditMode"-->
-<!--                  ref="bookShelf"></shelf>-->
+      <!--      <shelf class="book-shelf-list"-->
+      <!--                  :data="bookList"-->
+      <!--                  :isEditMode="isEditMode"-->
+      <!--                  ref="bookShelf"></shelf>-->
     </scroll>
   </div>
 </template>
@@ -79,13 +79,13 @@
           this.$refs.shelfTitle.showShadow();
           // 如果标题没显示，那说明搜索框显示了，那么给搜索框添加阴影
           if (!this.ifShowTitle) {
-            this.$refs.shelfSearch.showShadow()
+            // this.$refs.shelfSearch.showShadow();
           }
         } else {
           // 如果偏移量不够那么隐藏阴影
-          this.$refs.shelfTitle.hideShadow()
+          this.$refs.shelfTitle.hideShadow();
           if (this.$refs.shelfSearch) {
-            this.$refs.shelfSearch.hideShadow()
+            this.$refs.shelfSearch.hideShadow();
           }
         }
       },
@@ -104,6 +104,9 @@
       // 点击取消，显示标题栏，v-if/v-else决定显示中英文翻译按钮还是取消按钮
       onSearchCancel() {
         this.showTitle();
+        // this.showType = 0
+        // 点击取消回到顶部
+        this.$refs.scroll.scrollTo(0, 0)
       },
       // 显示标题
       showTitle() {

@@ -9,9 +9,7 @@
         <!--搜索输入框-->
         <div class="search-input-wrapper">
           <input class="search-input" type="text" :placeholder="$t('shelf.search')" @input="checkSearchText"
-                 @click="onSearchClick"
-                 v-model="searchText"
-                 ref="searchInput">
+                 @click="onSearchClick" v-model="searchText" ref="searchInput">
         </div>
         <!--小×黑圈，点击清除文字-->
         <div class="icon-clear-wrapper" @click="clearSearchText" v-if="ifShowClear">
@@ -43,8 +41,8 @@
 </template>
 
 <script>
-  import {getLocalStorage} from "../../utils/localStorage";
   import {switchLocale} from "../../utils/book";
+  import {getLocalStorage} from "../../utils/localStorage";
 
   export default {
     name: "ShelfSearch",
@@ -86,22 +84,8 @@
       showReadHistory() {
         switchLocale(this);
       },
-      // 显示阴影
-      showShadow() {
-        this.ifHideShadow = false
-      },
-      // 隐藏阴影
-      hideShadow() {
-        this.ifHideShadow = true
-      },
-      // 点击搜索框
-      onSearchClick() {
-        this.$emit('onSearchClick');
-        this.ifShowCancel = true;
-      },
       // 点击表单中的按钮
       onTabClick(item) {
-        console.log("点了");
         // 遍历 tabs 列表，判断与当前传入的item.id是否一致，是就显示选择字样，其它的不显示=>排他思想
         this.tabs.forEach(tab => {
           if (tab.id === item.id) {
@@ -110,8 +94,29 @@
             tab.selected = false
           }
         });
+        // 该语句作用暂不明了
+        // this.$emit('onTabClick', item.id);
         // 修改对象属性值，页面不发生变化，这里强制刷新
         this.$forceUpdate();
+      },
+      // 显示阴影
+      showShadow() {
+        this.ifHideShadow = false;
+      },
+      // 隐藏阴影
+      hideShadow() {
+        this.ifHideShadow = true;
+      },
+      // 点击取消按钮
+      onCancel() {
+        this.$emit('onCancel');
+        // 点击后显示取消按钮，并隐藏标题栏，置顶搜索栏
+        this.ifShowCancel = false;
+      },
+      // 点击搜索框
+      onSearchClick() {
+        this.$emit('onSearchClick');
+        this.ifShowCancel = true;
       },
       // 清除文本
       clearSearchText() {
@@ -126,12 +131,6 @@
         } else {
           this.ifShowClear = false
         }
-      },
-      // 点击取消按钮
-      onCancel() {
-        this.$emit('onCancel')
-        // 点击后显示取消按钮，并隐藏标题栏，置顶搜索栏
-        this.ifShowCancel = false
       },
     }
   }

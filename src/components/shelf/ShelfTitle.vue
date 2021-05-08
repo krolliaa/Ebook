@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="shelf-title-wrapper">
+    <div class="shelf-title-wrapper" :class="{'hide-shadow': ifHideShadow}">
       <div class="title">
         <span class="title-text">书架</span>
         <span class="sub-title-text" v-show="isEditMode">{{selectedText}}</span>
@@ -18,6 +18,11 @@
 <script>
 
   export default {
+    data() {
+      return {
+        ifHideShadow: true
+      }
+    },
     props: {
       isEditMode: Boolean,
       isShowBack: Boolean,

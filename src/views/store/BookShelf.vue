@@ -19,15 +19,23 @@
                  @clearCache="clearCache"
                  ref="shelfTitle"
                  v-show="ifShowTitle"></shelf-title>
+    <scroll class="book-shelf-scroll-wrapper" :top="0" ref="scroll"></scroll>
+    <shelf-search @onSearchClick="onSearchClick"
+                  @onCancel="onSearchCancel"
+                  ref="shelfSearch"></shelf-search>
   </div>
 </template>
 
 <script>
   import ShelfTitle from "../../components/shelf/ShelfTitle";
+  import ShelfSearch from "../../components/shelf/ShelfSearch";
+  import Scroll from "../../components/common/Scroll";
 
   export default {
     components: {
+      Scroll,
       ShelfTitle,
+      ShelfSearch
     },
     computed: {},
     data() {
@@ -45,7 +53,25 @@
       },
       clearCache() {
         alert("点了清除");
-      }
+      },
+      onSearchClick() {
+        // 回到不编辑模式
+        this.onEditClick(false);
+        // 隐藏标题
+        this.hideTitle();
+      },
+      // 点击取消，显示标题栏，v-if/v-else决定显示中英文翻译按钮还是取消按钮
+      onSearchCancel() {
+        this.showTitle();
+      },
+      // 显示标题
+      showTitle() {
+        this.ifShowTitle = true
+      },
+      // 隐藏标题
+      hideTitle() {
+        this.ifShowTitle = false
+      },
     }
   }
 </script>

@@ -4,10 +4,7 @@
     <div class="ebook-reader-mask"
          @click="onMaskClick"
          @touchmove="move"
-         @touchend="moveEnd"
-         @mousedown.left="onMouseEnter"
-         @mousemove.left="onMouseMove"
-         @mouseup.left="onMouseEnd"></div>
+         @touchend="moveEnd"></div>
   </div>
 </template>
 
@@ -22,7 +19,7 @@
     saveTheme,
     getTheme,
     getLocation,
-    clearLocalStorage
+    // clearLocalStorage
   } from "../../utils/localStorage";
   import {flatten} from "../../utils/book";
 
@@ -49,30 +46,6 @@
         this.book.ready.then(() => {
           return this.book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.getFileName) / 16));
         }).then(locations => {
-          this.getNavigation.forEach(nav => {
-            nav.pageList = []
-          });
-          locations.forEach(item => {
-            const loc = item.match(/\[(.*)\]!/)[1]
-            this.getNavigation.forEach(nav => {
-              if (nav.href) {
-                const href = nav.href.match(/^(.*)\.html$/)[1]
-                if (href === loc) {
-                  nav.pageList.push(item)
-                }
-              }
-            })
-            let currentPage = 1
-            this.getNavigation.forEach((nav, index) => {
-              if (index === 0) {
-                nav.page = 1
-              } else {
-                nav.page = currentPage
-              }
-              currentPage += nav.pageList.length + 1
-            })
-          })
-          this.setPageList(locations);
           this.setBookAvailable(true);
           this.refreshLocation();
         })
@@ -113,7 +86,7 @@
           height: innerHeight,
           method: 'default'
         })
-        clearLocalStorage();
+        // clearLocalStorage();
         const location = getLocation(this.getFileName);
         // 这里 location 为 null 时会自动不渲染
         this.display(location, () => {
@@ -214,9 +187,6 @@
         })
       },
       onMaskClick(e) {
-        if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) {
-          return
-        }
         const offsetX = e.offsetX;
         const width = window.innerWidth;
         if (offsetX > 0 && offsetX < width * 0.3) {
@@ -243,47 +213,7 @@
       moveEnd(e) {
         this.setOffsetY(0);
         this.firstOffsetY = null;
-      },
-      // 1 - 鼠标进入
-      // 2 - 鼠标进入后的移动
-      // 3 - 鼠标从移动状态松手
-      // 4 - 鼠标还原
-      onMouseEnd(e) {
-        if (this.mouseState === 2) {
-          this.setOffsetY(0)
-          this.firstOffsetY = null
-          this.mouseState = 3
-        } else {
-          this.mouseState = 4
-        }
-        const time = e.timeStamp - this.mouseStartTime
-        if (time < 100) {
-          this.mouseState = 4
-        }
-        e.preventDefault()
-        e.stopPropagation()
-      },
-      onMouseMove(e) {
-        if (this.mouseState === 1) {
-          this.mouseState = 2
-        } else if (this.mouseState === 2) {
-          let offsetY = 0
-          if (this.firstOffsetY) {
-            offsetY = e.clientY - this.firstOffsetY
-            this.setOffsetY(offsetY)
-          } else {
-            this.firstOffsetY = e.clientY
-          }
-        }
-        e.preventDefault()
-        e.stopPropagation()
-      },
-      onMouseEnter(e) {
-        this.mouseState = 1
-        this.mouseStartTime = e.timeStamp
-        e.preventDefault()
-        e.stopPropagation()
-      },
+      }
     }
   }
 </script>
@@ -295,7 +225,6 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-
     .ebook-reader-mask {
       position: absolute;
       top: 0;

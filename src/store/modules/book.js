@@ -19,6 +19,7 @@ const book = {
     bookText: null, // 当前页面的文字
     paginate: '', // 分页信息
     pageList: '', // 分页信息
+    isPaginating: true
   },
   mutations: {
     SET_FILENAME: (state, newFileName) => {
@@ -77,6 +78,9 @@ const book = {
     },
     SET_PAGE_LIST: (state, pageList) => {
       state.pageList = pageList;
+    },
+    SET_IS_PAGINATING: (state, isPaginating) => {
+      state.pageList = isPaginating;
     }
   }
 }

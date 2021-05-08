@@ -58,6 +58,18 @@
         <div id="preview" v-show="this.displayed" ref="preview"></div>
       </div>
     </scroll>
+    <!--底部栏目-->
+    <div class="bottom-wrapper">
+      <!--阅读本书-->
+      <div class="bottom-btn" @click.stop.prevent="readBook()">{{$t('detail.read')}}</div>
+      <!--听书-->
+      <div class="bottom-btn" @click.stop.prevent="trialListening()">{{$t('detail.listen')}}</div>
+      <!--加入书架-->
+      <div class="bottom-btn" @click.stop.prevent="addOrRemoveShelf()">
+        <span class="icon-check" v-if="inBookShelf"></span>
+        {{inBookShelf ? $t('detail.isAddedToShelf') : $t('detail.addOrRemoveShelf')}}
+      </div>
+    </div>
     <toast :text="toastText" ref="toast"></toast>
   </div>
 </template>
@@ -70,6 +82,7 @@
   import {flatList, detail} from "../../api/book";
   import {px2rem, realPx} from "../../utils/utils";
   import {getLocalStorage} from "../../utils/localStorage";
+  import {getLocalForage} from "../../utils/localForage";
   import Epub from 'epubjs';
 
   global.ePub = Epub;
@@ -119,6 +132,19 @@
           return []
         }
       },
+      // 加入书架
+      inBookShelf() {
+        return false;
+        // if (this.bookItem && this.bookShelf) {
+        //   const flatShelf = (function flatten(arr) {
+        //     return [].concat(...arr.map(v => v.itemList ? [v, ...flatten(v.itemList)] : v));
+        //   })(this.bookShelf).filter(item => item.type === 1)
+        //   const book = flatShelf.filter(item => item.fileName === this.bookItem.fileName);
+        //   return book && book.length > 0;
+        // } else {
+        //   return false;
+        // }
+      }
     },
     data() {
       return {
@@ -144,6 +170,7 @@
       this.init();
     },
     methods: {
+      // 显示目录样式
       itemStyle(item) {
         return {
           marginLeft: (item.deep - 1) * px2rem(20) + 'rem'
@@ -152,6 +179,7 @@
       back() {
         this.$router.go(-1)
       },
+      // 初始化页面 => 获取图书信息
       init() {
         // 从URL地址栏获取书名
         const fileName = this.$route.query.fileName;
@@ -242,6 +270,37 @@
           this.$refs.title.hideShadow()
         }
       },
+      findBookFromList(fileName) {
+        flatList().then(response => {
+          if (response.status === 200) {
+            const bookList = response.data.data.filter(item => item.fileName === fileName)
+            if (bookList && bookList.length > 0) {
+              this.bookItem = bookList[0]
+              console.log(this.bookItem)
+              this.initBook()
+            }
+          }
+        })
+      },
+      initBook() {
+        if (this.bookItem) {
+          getLocalForage(this.bookItem.fileName, (err, blob) => {
+            if (err) {
+              this.downloadBook()
+            } else {
+              if (blob) {
+                this.parseBook(blob)
+              } else {
+                this.downloadBook()
+              }
+            }
+          })
+        }
+      },
+      downloadBook() {
+        const opf = `${process.env.VUE_APP_EPUB_URL}/${this.bookItem.categoryText}/${this.bookItem.fileName}/OEBPS/package.opf`
+        this.parseBook(opf)
+      },
       // 点击目录可以直接跳转阅读
       read(item) {
         getLocalForage(this.bookItem.fileName, (err, value) => {
@@ -253,7 +312,6 @@
               }
             })
           } else {
-            // this.showToast(this.$t('shelf.downloadFirst'))
             this.$router.push({
               path: `/ebook/${this.bookItem.fileName}`,
               query: {
@@ -264,6 +322,48 @@
           }
         })
       },
+      // 阅读器功能
+      readBook() {
+        getLocalForage(this.bookItem.fileName, (err, value) => {
+          if (!err && value instanceof Blob) {
+            this.$router.push({
+              path: `/ebook/${this.bookItem.fileName}`
+            })
+          } else {
+            this.$router.push({
+              path: `/ebook/${this.bookItem.fileName}`,
+              query: {
+                opf: this.opf
+              }
+            })
+          }
+        })
+      },
+      // 听书功能
+      trialListening() {
+        getLocalForage(this.bookItem.fileName, (err, value) => {
+          if (!err && value instanceof Blob) {
+            this.$router.push({
+              path: '/book-store/book-speaking',
+              query: {
+                fileName: this.bookItem.fileName
+              }
+            })
+          } else {
+            this.$router.push({
+              path: '/book-store/book-speaking',
+              query: {
+                fileName: this.bookItem.fileName,
+                opf: this.opf
+              }
+            })
+          }
+        })
+      },
+      // 是否添加进书架
+      addOrRemoveShelf() {
+        alert("添加成功");
+      }
     }
   }
 </script>

@@ -232,3 +232,32 @@ export function getCategoryName(id) {
       return 'Statistics'
   }
 }
+
+// 清除缓存
+export function removeFromBookShelf(bookItem) {
+  let bookList = getLocalStorage(BOOK_SHELF_KEY)
+  bookList = bookList.filter(item => {
+    if (item.itemList) {
+      item.itemList = item.itemList.filter(subItem => subItem.fileName !== bookItem.fileName)
+    }
+    return item.fileName !== bookItem.fileName
+  })
+  setLocalStorage(BOOK_SHELF_KEY, bookList)
+}
+
+
+export function switchLocale(vue) {
+  if (vue.$i18n.locale === 'en') {
+    vue.$i18n.locale = 'cn'
+  } else {
+    vue.$i18n.locale = 'en'
+  }
+  setLocalStorage('locale', vue.$i18n.locale)
+}
+
+export function reset(vue) {
+  vue.$store.dispatch('setMenuVisible', false)
+  vue.$store.dispatch('setSettingVisible', 0)
+  vue.$store.dispatch('setFontFamilyVisible', false)
+  vue.$store.dispatch('setSpeakingIconBottom', realPx(58))
+}

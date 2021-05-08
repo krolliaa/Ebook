@@ -23,7 +23,8 @@ export const ebookMixin = {
       'getIsBookmark',
       'getBookText',
       'getPaginate',
-      'getPageList'
+      'getPageList',
+      'getIsPaginating'
     ]),
     getThemeList() {
       return themeList(this);
@@ -52,7 +53,8 @@ export const ebookMixin = {
       'setIsBookmark',
       'setBookText',
       'setPaginate',
-      'setPageList'
+      'setPageList',
+      'setIsPaginating'
     ]),
     // 插入主题样式样式
     initGlobalStyle() {

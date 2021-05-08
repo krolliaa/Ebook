@@ -17,6 +17,9 @@ const getters = {
   getDefaultFontFamily: state => {
     return state.book.defaultFontFamily;
   },
+  getIsPaginating: state => {
+    return state.book.isPaginating;
+  },
   getFontFamilyPopUpVisible: state => {
     return state.book.fontFamilyPopUpVisible;
   },

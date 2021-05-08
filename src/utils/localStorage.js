@@ -110,3 +110,11 @@ export function getHome() {
 export function saveHome(home) {
   return setLocalStorage('home', home, 1800)
 }
+
+export function getMetadata(fileName) {
+  return getBookObject(fileName, 'metadata')
+}
+
+export function saveMetadata(fileName, metadata) {
+  setBookObject(fileName, 'metadata', metadata)
+}

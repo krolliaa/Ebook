@@ -11,6 +11,9 @@ const actions = {
   setDefaultFontSize: ({commit, state}, fontSize) => {
     return commit('SET_DEFAULT_FONT_SIZE', fontSize);
   },
+  setIsPaginating: ({ commit }, isPaginating) => {
+    return commit('SET_IS_PAGINATING', isPaginating)
+  },
   setCurrentBook: ({commit, state}, currentBook) => {
     return commit('SET_CURRENT_BOOK', currentBook);
   },

@@ -29,6 +29,16 @@
         <span class="cancel-btn">{{$t('shelf.cancel')}}</span>
       </div>
     </div>
+
+    <!--点击输入框显示 默认 按进度 按购买 列表-->
+    <transition name="shelf-tab-slide-up">
+      <div class="tab-wrapper" v-if="ifShowCancel">
+        <div class="tab-item" v-for="(item, index) in tabs" :key="index" @click="onTabClick(item)">
+          <span class="tab-item-text" :class="{'is-selected': item.selected}" v-if="showShadow">{{item.text}}</span>
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
@@ -46,20 +56,65 @@
         searchText: ''
       }
     },
+    computed: {
+      tabs() {
+        return [
+          {
+            id: 1,
+            text: this.$t('shelf.default'),
+            selected: true
+          },
+          {
+            id: 2,
+            text: this.$t('shelf.progress'),
+            selected: false
+          },
+          {
+            id: 3,
+            text: this.$t('shelf.purchase'),
+            selected: false
+          }
+        ]
+      }
+    },
     methods: {
+      // 本地存储中的语言包
       lang() {
         return getLocalStorage('locale')
       },
+      // 中英文切换
       showReadHistory() {
         switchLocale(this);
       },
+      // 显示阴影
+      showShadow() {
+        this.ifHideShadow = false
+      },
+      // 隐藏阴影
+      hideShadow() {
+        this.ifHideShadow = true
+      },
+      // 点击搜索框
       onSearchClick() {
         this.$emit('onSearchClick');
         this.ifShowCancel = true;
       },
+      // 点击表单中的按钮
+      onTabClick(item) {
+        console.log("点了");
+        // 遍历 tabs 列表，判断与当前传入的item.id是否一致，是就显示选择字样，其它的不显示=>排他思想
+        this.tabs.forEach(tab => {
+          if (tab.id === item.id) {
+            tab.selected = true
+          } else {
+            tab.selected = false
+          }
+        });
+        // 修改对象属性值，页面不发生变化，这里强制刷新
+        this.$forceUpdate();
+      },
       // 清除文本
       clearSearchText() {
-        console.log(this.searchText);
         this.searchText = '';
         this.checkSearchText();
         this.$emit('clearSearchText');
@@ -72,6 +127,7 @@
           this.ifShowClear = false
         }
       },
+      // 点击取消按钮
       onCancel() {
         this.$emit('onCancel')
         // 点击后显示取消按钮，并隐藏标题栏，置顶搜索栏

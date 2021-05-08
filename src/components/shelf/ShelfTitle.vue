@@ -27,7 +27,12 @@
     components: {},
     computed: {
       selectedText() {
-        return this.$t('shelf.selectBook');
+        // 如果等于0直接显示选择书籍
+        // 不等于0显示选择多少本书籍
+        return this.selectedNumber === 0 ? this.$t('shelf.selectBook') : (this.selectedNumber === 1 ? this.$t('shelf.haveSelectedBook').replace('$1', this.selectedNumber) : this.$t('shelf.haveSelectedBooks').replace('$1', this.selectedNumber));
+      },
+      selectedNumber() {
+        return 1;
       }
     },
     methods: {

@@ -53,6 +53,12 @@
           this.$emit('onEditClick', true);
         }
       },
+      showShadow() {
+        this.ifHideShadow = false
+      },
+      hideShadow() {
+        this.ifHideShadow = true
+      },
       back() {
         this.$router.go(-1)
       },

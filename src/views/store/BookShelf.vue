@@ -19,10 +19,33 @@
                  @clearCache="clearCache"
                  ref="shelfTitle"
                  v-show="ifShowTitle"></shelf-title>
-    <scroll class="book-shelf-scroll-wrapper" :top="0" ref="scroll"></scroll>
-    <shelf-search @onSearchClick="onSearchClick"
-                  @onCancel="onSearchCancel"
-                  ref="shelfSearch"></shelf-search>
+    <scroll class="book-shelf-scroll-wrapper" :top="0" @onScroll="onScroll" ref="scroll">
+      <shelf-search @onSearchClick="onSearchClick"
+                    @onCancel="onSearchCancel"
+                    ref="shelfSearch"></shelf-search>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+      <div style="height: 50px!important;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+<!--      <shelf class="book-shelf-list"-->
+<!--                  :data="bookList"-->
+<!--                  :isEditMode="isEditMode"-->
+<!--                  ref="bookShelf"></shelf>-->
+    </scroll>
   </div>
 </template>
 
@@ -30,6 +53,7 @@
   import ShelfTitle from "../../components/shelf/ShelfTitle";
   import ShelfSearch from "../../components/shelf/ShelfSearch";
   import Scroll from "../../components/common/Scroll";
+  import {realPx} from "../../utils/utils";
 
   export default {
     components: {
@@ -48,6 +72,23 @@
       }
     },
     methods: {
+      onScroll(offsetY) {
+        // 偏移量大于了54（搜索框高度）了
+        if (offsetY > realPx(54)) {
+          // 标题栏显示阴影
+          this.$refs.shelfTitle.showShadow();
+          // 如果标题没显示，那说明搜索框显示了，那么给搜索框添加阴影
+          if (!this.ifShowTitle) {
+            this.$refs.shelfSearch.showShadow()
+          }
+        } else {
+          // 如果偏移量不够那么隐藏阴影
+          this.$refs.shelfTitle.hideShadow()
+          if (this.$refs.shelfSearch) {
+            this.$refs.shelfSearch.hideShadow()
+          }
+        }
+      },
       onEditClick(v) {
         this.isEditMode = v;
       },

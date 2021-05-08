@@ -8,7 +8,8 @@
         </div>
         <!--搜索输入框-->
         <div class="search-input-wrapper">
-          <input class="search-input" type="text" :placeholder="$t('shelf.search')" @input="checkSearchText" @click="onSearchClick"
+          <input class="search-input" type="text" :placeholder="$t('shelf.search')" @input="checkSearchText"
+                 @click="onSearchClick"
                  v-model="searchText"
                  ref="searchInput">
         </div>
@@ -17,8 +18,9 @@
           <span class="icon-close-circle-fill icon"></span>
         </div>
       </div>
-      <!--没有点击文本框显示中英文按钮-->
-      <div class="icon-clock-wrapper" v-if="!ifShowCancel">
+      <!--没有点击文本框显示中英文按钮，点击时切换-->
+      <div class="icon-clock-wrapper" v-if="!ifShowCancel" @click="showReadHistory">
+        <!--根据本地存储的中英文方式来决定显示哪个标志-->
         <span class="icon-cn icon" v-if="lang() === 'cn'"></span>
         <span class="icon-en icon" v-else></span>
       </div>
@@ -32,6 +34,7 @@
 
 <script>
   import {getLocalStorage} from "../../utils/localStorage";
+  import {switchLocale} from "../../utils/book";
 
   export default {
     name: "ShelfSearch",
@@ -46,6 +49,9 @@
     methods: {
       lang() {
         return getLocalStorage('locale')
+      },
+      showReadHistory() {
+        switchLocale(this);
       },
       onSearchClick() {
         this.$emit('onSearchClick');

@@ -1,5 +1,6 @@
 import {realPx} from "./utils";
 import {getReadTime} from "./localStorage";
+import {setLocalStorage, getLocalStorage} from "./localStorage";
 
 // 字号列表
 export const FONT_SIZE_LIST = [
@@ -244,7 +245,6 @@ export function removeFromBookShelf(bookItem) {
   })
   setLocalStorage(BOOK_SHELF_KEY, bookList)
 }
-
 
 export function switchLocale(vue) {
   if (vue.$i18n.locale === 'en') {

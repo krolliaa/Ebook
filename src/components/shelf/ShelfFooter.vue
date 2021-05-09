@@ -79,7 +79,7 @@
           // 找到就返回 true
           return this.data.some(item => item.selected);
         } else {
-          return true;
+          return false;
         }
       },
       // 是否私密
@@ -95,9 +95,10 @@
                 return true;
               }
             })
+          } else {
+            return false;
           }
         }
-        return true;
       },
       // 是否下载
       isDownload() {
@@ -112,9 +113,10 @@
                 return true;
               }
             })
+          } else {
+            return false;
           }
         }
-        return true;
       },
       // 四个标签
       tabs() {
@@ -141,6 +143,16 @@
       }
     },
     methods: {
+      // 所选书籍
+      selectedBooks() {
+        const selectedBooks = [];
+        this.data.forEach(item => {
+          if (item.selected) {
+            selectedBooks.push(item);
+          }
+        })
+        return selectedBooks;
+      },
       // 显示数据，在显示的时候就循环遍历条件 绝妙的思想
       // 这样就不用单独写方法判断了
       label(item) {

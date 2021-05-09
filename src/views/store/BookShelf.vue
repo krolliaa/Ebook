@@ -32,16 +32,16 @@
                     @onCancel="onSearchCancel"
                     @onTabClick="onSearchTabClick"
                     ref="shelfSearch"
-                    v-if="isDataEmpty"></shelf-search>
+                    v-if="!isDataEmpty"></shelf-search>
       <shelf-list class="book-shelf-list"
                   :data="bookList"
                   :showType="showType"
                   :isEditMode="isEditMode"
                   @onBookClick="onBookClick"
                   ref="bookShelf"
-                  v-if="isDataEmpty"></shelf-list>
+                  v-if="!isDataEmpty"></shelf-list>
       <!--书架中没有书的时候展示的内容，纯页面，有点鸡肋，可以不要-->
-      <shelf-empty class="book-shelf-empty" v-if="!isDataEmpty"></shelf-empty>
+      <shelf-empty class="book-shelf-empty" v-if="isDataEmpty"></shelf-empty>
       <shelf-footer class="book-shelf-footer"
                     :data="bookList"
                     :bookList="bookList"
@@ -91,7 +91,7 @@
       return {
         bookList: [], // 书架书籍
         ifShowTitle: true, // 是否显示标题 默认显示
-        isEditMode: true, // 是否处于编辑模式 默认不显示
+        isEditMode: false, // 是否处于编辑模式 默认不显示
         ifShowBack: false, // 是否显示返回按钮 默认不显示
         ifShowClear: true, // 是否显示清除缓存按钮 默认显示
         scrollBottom: 0,
@@ -128,6 +128,7 @@
             this.initBookShelf();
           });
         }
+        ;
         // 如果本地存储书架不为空直接初始化书架
         this.initBookShelf();
       },
@@ -135,13 +136,13 @@
       getSelectedBooks() {
         // 获取不在分组里的图书 有可能为空
         const selectedBooks = this.bookList.filter(item => {
-          return item.selected
+          return item.selected;
         });
         // 获取分组中选中的图书
         this.bookList.filter(item => {
           if (item.type === 2 && item.itemList) {
             // 分组中选中的图书
-            item.filter(subItem => {
+            item.itemList.filter(subItem => {
               if (subItem.selected) {
                 selectedBooks.push(subItem);
               }
@@ -164,7 +165,7 @@
       },
       // 5从本地存储中获取书架信息
       getBookShelfFromLocalStorage() {
-        return getLocalStorage(BOOK_SHELF_KEY)
+        return getLocalStorage(BOOK_SHELF_KEY);
       },
       // 6根据滚动条显示/隐藏阴影
       onScroll(offsetY) {
@@ -193,17 +194,17 @@
         switch (operation) {
           case 1:
             // 移动至分组
-            this.moveToGroup(group)
-            break
+            this.moveToGroup(group);
+            break;
           case 2:
             // 新建分组
-            this.newGroup(group)
-            this.moveToGroup(group)
-            break
+            this.newGroup(group);
+            this.moveToGroup(group);
+            break;
           case 3:
             // 移出分组
-            this.moveOutGroup()
-            break
+            this.moveOutGroup();
+            break;
         }
       },
       // 9移动至分组
@@ -284,8 +285,8 @@
         this.$refs.toast.show()
       },
       // 15获取除了添加图书以外的所有图书和分组
-      clearAddFromBookList(bookList) {
-        this.bookList = bookList.filter(item => {
+      clearAddFromBookList() {
+        this.bookList = this.bookList.filter(item => {
           return item.type !== 3
         });
       },
@@ -393,7 +394,7 @@
       hideToast() {
         this.$refs.toast.hide()
       },
-      // 26 持续弹窗
+      // 26 持续弹窗用于下载时显示进度
       showContinueToast(text) {
         this.toastText = text
         this.$refs.toast.continueShow()
@@ -413,7 +414,8 @@
       },
       // 28 下载图书
       // 29 下载图书相关
-      setDownload(){}
+      setDownload() {
+      }
       // 30 下载图书相关
       // 31 移除下载的图书
     }

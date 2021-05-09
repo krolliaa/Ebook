@@ -109,7 +109,7 @@
             if (item.private && item.type === 1) {
               number++;
             } else if (item.type === 2 && item.itemList.length > 0) {
-              number += item.filter(subItem => {
+              number += item.itemList.filter(subItem => {
                 return subItem.private && subItem.type === 1;
               }).length
             }

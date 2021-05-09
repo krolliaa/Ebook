@@ -24,10 +24,10 @@
               </div>
             </div>
           </div>
-          <!--取消按钮-->
-          <div class="dialog-btn-wrapper" @click="hide">
-            <div class="dialog-btn">{{$t('shelf.cancel')}}</div>
-          </div>
+        </div>
+        <!--取消按钮-->
+        <div class="dialog-btn-wrapper" @click="hide">
+          <div class="dialog-btn">{{$t('shelf.cancel')}}</div>
         </div>
       </div>
 
@@ -105,7 +105,6 @@
       // 全部分组列表 默认的栏目 + bookList带的分组
       categoryList() {
         const list = this.bookList ? this.bookList.filter(item => item.type === 2) : [];
-        console.log([...this.defaultCategory, ...list]);
         return [...this.defaultCategory, ...list];
       }
     },
@@ -118,7 +117,13 @@
           this.hide()
         } else {
           if (this.newGroupName.length > 0) {
-
+            this.$emit('group', 2, {
+              id: this.bookList[this.bookList.length - 2].id + 1,
+              itemList: [],
+              selected: false,
+              title: this.newGroupName,
+              type: 2
+            })
           }
         }
         this.hide();
@@ -192,6 +197,7 @@
     font-size: px2rem(16);
     color: #333;
     @include center;
+
     .shelf-group-dialog-wrapper {
       position: relative;
       display: flex;
@@ -200,36 +206,45 @@
       max-height: 80%;
       background: white;
       border-radius: px2rem(10);
+
       .dialog-list {
         width: 100%;
         padding: 0 px2rem(20);
         box-sizing: border-box;
         @include scroll;
+
         .dialog-title-wrapper {
           font-size: px2rem(22);
           font-weight: bold;
           text-align: center;
           padding: px2rem(30) 0 px2rem(20) 0;
         }
+
         .dialog-list-wrapper {
           font-size: px2rem(14);
+
           .dialog-list-item {
             display: flex;
             padding: px2rem(15) 0;
             box-sizing: border-box;
             color: #666;
+
             &.is-add {
               color: $color-blue;
+
               &:active {
                 color: $color-blue-transparent;
               }
             }
+
             &:active {
               color: rgba(102, 102, 102, .5)
             }
+
             .dialog-list-item-text {
               flex: 1;
             }
+
             .dialog-list-icon-wrapper {
               flex: 0 0 px2rem(30);
               color: $color-blue;
@@ -238,6 +253,7 @@
           }
         }
       }
+
       .dialog-btn-wrapper {
         display: flex;
         width: 100%;
@@ -249,24 +265,30 @@
         padding: px2rem(15) 0;
         box-sizing: border-box;
         border-radius: 0 0 px2rem(10) px2rem(10);
+
         .dialog-btn {
           flex: 1;
+
           &.is-empty {
             color: rgba(255, 255, 255, .5);
           }
+
           &:active {
             color: rgba(255, 255, 255, .5)
           }
         }
       }
+
       .dialog-input-title-wrapper {
         font-size: px2rem(10);
         margin-top: px2rem(20);
       }
+
       .dialog-input-wrapper {
         width: 100%;
         padding: 0 0 px2rem(30) 0;
         box-sizing: border-box;
+
         .dialog-input-inner-wrapper {
           display: flex;
           width: 100%;
@@ -275,17 +297,21 @@
           border-bottom: px2rem(1) solid #eee;
           font-size: px2rem(14);
           color: #666;
+
           .dialog-input {
             flex: 1;
             border: none;
+
             &:focus {
               outline: none;
             }
           }
+
           .dialog-input-clear-wrapper {
             flex: 0 0 px2rem(30);
             color: #ccc;
             @include center;
+
             &:active {
               color: #999;
             }

@@ -68,6 +68,7 @@ const messages = {
     removeDownloadSuccess: '已选书籍的离线内容已删除',
     delete: '删除',
     clearCache: '清除缓存',
+    changeLanguage: '切换语言',
     clearCacheSuccess: '缓存已清空',
     removeBookTitle: '是否将$1移出书架？',
     removeBook: '移出',

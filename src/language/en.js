@@ -67,6 +67,7 @@ const messages = {
     removeDownloadTitle: 'Once confirmed, the offline books of selected will be remove',
     removeDownloadSuccess: 'Offline books of selected has been remove',
     delete: 'Remove',
+    changeLanguage: 'Change Language',
     clearCache: 'Clear Cache',
     clearCacheSuccess: 'Clear cache successfully, cache is empty',
     removeBookTitle: 'Whether to remove $1 out of the bookshelf?',

@@ -23,7 +23,24 @@
     </transition-group>
 
     <!--不同显示类型显示不同布局-->
-    <!--showType:1表示没有点击搜索框 || showType:2 | 3 表示点击搜索框-->
+    <!--showType:0表示没有点击搜索框 || 1表示点击搜索框 || 2按进度 || 3按购买-->
+    <!--上面已经做了showType === 0 || 1 时的样式，这里做按进度和按购买显示的样式-->
+<!--    <div class="book-shelf-label-list-wrapper" v-if="showType === 2 || showType === 3">-->
+<!--      <div class="book-shelf-list-wrapper" v-for="(item, index) in purchaseData" :key="index" ref="bookShelfList">-->
+<!--        <div class="book-shelf-label-item" :class="{'is-fixed': item.isFixed}">-->
+<!--          <span class="book-shelf-label-text">{{item.label}}</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="book-shelf-item-wrapper">-->
+<!--        <div class="book-shelf-item">-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <!--只有在默认图书页面时-->
+    <!--显示几本公开，几本私密-->
+    <div class="book-shelf-statistics" v-show="showType === 0">{{$t('shelf.statistic').replace('$1',
+      publicNumber).replace('$2', privateNumber)}}
+    </div>
   </div>
 </template>
 
@@ -59,7 +76,7 @@
         } else if (this.showType === 1) {
           return flatBookList(this.data);
         }
-        return this.data;
+        return flatBookList(this.data);
       },
       // 公开图书个数
       publicNumber() {
@@ -109,24 +126,26 @@
           label: this.$t('shelf.bought'),
           // 经过扁平化的数据，因为bookList里面可能有分组
           bookList: this.flatData.filter(item => item.cache),
+          // bookList: flatBookList(this.data),
           isFixed: false
         }
         // 未购买
         const notPurchased = {
           label: this.$t('shelf.notPurchased'),
           bookList: this.flatData.filter(item => !item.cache),
+          // bookList: flatBookList(this.data),
           isFixed: false
         }
         return [bought, notPurchased];
       },
       // 获取位置（未明）
-      bookShelfList() {
-        return this.$refs.bookShelfList[0].getBoundingClientRect().height;
-      },
+      // bookShelfList() {
+      //   return this.$refs.bookShelfList[0].getBoundingClientRect().height;
+      // },
       // 获取位置（未明）
-      bookShelfList2() {
-        return this.$refs.bookShelfList[1].getBoundingClientRect().height;
-      }
+      // bookShelfList2() {
+      //   return this.$refs.bookShelfList[1].getBoundingClientRect().height;
+      // }
     },
     methods: {
       onBookClick(item, index) {
@@ -163,23 +182,28 @@
     width: 100%;
     overflow: auto;
     font-size: 0;
+
     #book-shelf-list {
       display: flex;
       flex-flow: row wrap;
       width: 100%;
       padding: 0 px2rem(15);
       box-sizing: border-box;
+
       .book-shelf-item {
         flex: 0 0 33.33%;
         width: 33.33%;
         padding: px2rem(15);
         box-sizing: border-box;
+
         &.list-move {
           transition: transform .5s;
         }
+
         &.list-leave-active {
           display: none;
         }
+
         .book-img-wrapper {
           width: 100%;
           @include shelfImgHeight;
@@ -187,24 +211,29 @@
           @include center;
           border: px2rem(1) solid #eee;
           box-sizing: border-box;
+
           &.add-book {
             box-shadow: none;
             border: px2rem(1) solid #ccc;
             box-sizing: border-box;
           }
+
           &.category-book {
             border: px2rem(1) solid #eee;
             box-sizing: border-box;
           }
+
           .book-img {
             width: 100%;
             height: 100%;
           }
+
           .icon-add {
             font-size: px2rem(40);
             color: #ccc;
           }
         }
+
         .book-title-wrapper {
           .book-title {
             margin-top: px2rem(10);
@@ -212,17 +241,21 @@
         }
       }
     }
+
     .book-shelf-statistics {
       margin: px2rem(30) 0 px2rem(20) 0;
       text-align: center;
       font-size: px2rem(12);
       color: #999;
     }
+
     .book-shelf-label-list-wrapper {
       width: 100%;
+
       .book-shelf-list-wrapper {
         position: relative;
         width: 100%;
+
         .book-shelf-label-item {
           position: absolute;
           top: 0;
@@ -234,19 +267,23 @@
           border-bottom: none;
           box-sizing: border-box;
           background: white;
+
           &.is-fixed {
             position: fixed;
             top: px2rem(93);
             left: 0;
             border-bottom: px2rem(1) solid #eee;
           }
+
           @include left;
+
           .book-shelf-label-text {
             font-size: px2rem(14);
             color: #666;
             margin: 0 px2rem(15);
           }
         }
+
         .book-shelf-item-wrapper {
           position: relative;
           z-index: 110;
@@ -255,17 +292,21 @@
           width: 100%;
           padding: px2rem(42) px2rem(15) 0 px2rem(15);
           box-sizing: border-box;
+
           .book-shelf-item {
             flex: 0 0 33.33%;
             width: 33.33%;
             padding: px2rem(15);
             box-sizing: border-box;
+
             &.list-move {
               transition: transform .5s;
             }
+
             &.list-leave-active {
               display: none;
             }
+
             .book-img-wrapper {
               width: 100%;
               @include shelfImgHeight;
@@ -273,24 +314,29 @@
               @include center;
               border: px2rem(1) solid #eee;
               box-sizing: border-box;
+
               &.add-book {
                 box-shadow: none;
                 border: px2rem(1) solid #ccc;
                 box-sizing: border-box;
               }
+
               &.category-book {
                 border: px2rem(1) solid #eee;
                 box-sizing: border-box;
               }
+
               .book-img {
                 width: 100%;
                 height: 100%;
               }
+
               .icon-add {
                 font-size: px2rem(40);
                 color: #ccc;
               }
             }
+
             .book-title-wrapper {
               .book-title {
                 margin-top: px2rem(10);

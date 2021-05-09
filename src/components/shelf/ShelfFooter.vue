@@ -36,21 +36,29 @@
            :isRemoveText="isRemoveText"
            :cancelText="$t('shelf.cancel')"
            @confirm="onConfirm"></popup>
+    <shelf-group-dialog :visible.sync="ifGroupDialogShow"
+                        :data="data"
+                        :bookList="bookList"
+                        :category="category"
+                        :isInGroup="isInGroup"
+                        @group="groupEdit"></shelf-group-dialog>
   </div>
 </template>
 
 <script>
   import Popup from "./Popup";
+  import ShelfGroupDialog from "./ShelfGroupDialog";
 
   export default {
     name: "ShelfFooter",
     components: {
-      Popup
+      Popup,
+      ShelfGroupDialog
     },
     props: {
       data: Array,
-      isInGroup: Boolean,
       bookList: Array,
+      isInGroup: Boolean,
       category: Object
     },
     data() {
@@ -165,7 +173,7 @@
       },
       // 是否私密的上拉框
       showPrivate() {
-        if (!this.isSelected) {
+        if (this.isSelected) {
           // 是私密就显示为设置非私密上拉框，非私密就显示成私密上拉框
           if (!this.isPrivate) {
             this.showPopup(this.$t('shelf.setPrivateTitle'), this.$t('shelf.open'), this.onSetPrivate);
@@ -186,6 +194,7 @@
       },
       // 弹出分组
       showGroupDialog() {
+        this.ifGroupDialogShow = true;
         if (this.isSelected) {
           // 有选择就可以设置移动分组，弹出分组框
           this.ifGroupDialogShow = true;
@@ -211,7 +220,6 @@
         // confirmText 为开启/关闭
         // onConfirm 为要执行的方法
         // isRemoveText 是否移出
-        console.log(title);
         this.popTitle = title;
         this.confirmText = confirmText;
         this.onConfirm = onConfirm;

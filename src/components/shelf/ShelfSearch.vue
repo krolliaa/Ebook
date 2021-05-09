@@ -94,8 +94,8 @@
             tab.selected = false
           }
         });
-        // 该语句作用暂不明了
-        // this.$emit('onTabClick', item.id);
+        // 返回点击默认1还是按进度2还是按购买3
+        this.$emit('onTabClick', item.id);
         // 修改对象属性值，页面不发生变化，这里强制刷新
         this.$forceUpdate();
       },

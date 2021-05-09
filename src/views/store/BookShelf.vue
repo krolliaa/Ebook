@@ -50,7 +50,7 @@
                     @setDownload="setDownload"
                     @removeBook="removeBook"
                     @groupEdit="groupEdit"
-                    v-show="!isEditMode"></shelf-footer>
+                    v-show="isEditMode"></shelf-footer>
       <toast :text="toastText" ref="toast"></toast>
     </scroll>
   </div>
@@ -91,7 +91,7 @@
       return {
         bookList: [], // 书架书籍
         ifShowTitle: true, // 是否显示标题 默认显示
-        isEditMode: false, // 是否处于编辑模式 默认不显示
+        isEditMode: true, // 是否处于编辑模式 默认不显示
         ifShowBack: false, // 是否显示返回按钮 默认不显示
         ifShowClear: true, // 是否显示清除缓存按钮 默认显示
         scrollBottom: 0,
@@ -186,7 +186,7 @@
       },
       // 7点击默认/按进度/按购买时的不同状态 √
       onSearchTabClick(id) {
-        this.showType = id
+        this.showType = id;
       },
       // 8图书分组操作 √
       groupEdit(operation, group) {
@@ -411,7 +411,6 @@
         this.onEditClick(false);
         this.saveBookShelfToLocalStorage();
       },
-
       // 28 下载图书
       // 29 下载图书相关
       setDownload(){}

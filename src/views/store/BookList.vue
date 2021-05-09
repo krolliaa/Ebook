@@ -1,13 +1,111 @@
 <template>
-  <div class="book-list"></div>
+  <!--查看栏目+分类栏目跳转的列表-->
+  <div class="book-list-wrapper">
+    <detail-title :title="title"
+                  :showShelf="true"
+                  @back="back"
+                  ref="title"></detail-title>
+    <scroll class="book-list-scroll-wrapper"
+            :top="42"
+            @onScroll="onScroll"
+            ref="scroll">
+      <featured :data="value" :titleText="titleText ? titleText : getCategoryText(key)" :btnText="''" v-for="(value, key, index) in list" :key="index"></featured>
+    </scroll>
+  </div>
 </template>
 
 <script>
+  import DetailTitle from "../../components/detail/DetailTitle";
+  import Scroll from "../../components/common/Scroll";
+  import Featured from "../../components/home/Featured";
+  import {realPx} from "../../utils/utils";
+  import {list} from "../../api/book";
+  import {categoryList, categoryText} from "../../utils/book";
+
   export default {
-    name: "BookList"
+    name: "BookList",
+    components: {
+      DetailTitle,
+      Scroll,
+      Featured
+    },
+    data() {
+      return {
+        list: null,
+        total: null,
+        titleText: ''
+      }
+    },
+    computed: {
+      // 标题
+      title() {
+        if (this.list) {
+          return this.total && this.$t('home.allBook').replace('$1', this.totalNumber)
+        } else {
+          return null
+        }
+      },
+      // 书籍个数
+      totalNumber() {
+        let num = 0
+        Object.keys(this.list).forEach(key => {
+          num += this.list[key].length
+        })
+        return num
+      }
+    },
+    methods: {
+      getCategoryText(key) {
+        return `${categoryText(categoryList[key], this)}(${this.list[key].length})`
+      },
+      back() {
+        this.$router.go(-1)
+      },
+      onScroll(offsetY) {
+        if (offsetY > realPx(42)) {
+          this.$refs.title.showShadow()
+        } else {
+          this.$refs.title.hideShadow()
+        }
+      },
+      // 该组件核心方法
+      getList() {
+        // 获取所有图书列表
+        list().then(response => {
+          this.list = response.data.data;
+          this.total = response.data.total;
+          const category = this.$route.query.category;
+          const keyword = this.$route.query.keyword;
+          // 如果有传递特定种类
+          if (category) {
+            // 返回种类
+            const key = Object.keys(this.list).filter(item => item === category)[0];
+            const data = this.list[key]
+            this.list = {}
+            this.list[key] = data
+            // 如果是搜索的关键字
+          } else if (keyword) {
+            Object.keys(this.list).filter(key => {
+              this.list[key] = this.list[key].filter(book => book.fileName.indexOf(keyword) >= 0)
+              return this.list[key].length > 0
+            })
+          }
+        })
+      }
+    },
+    created() {
+      this.getList()
+      this.titleText = this.$route.query.categoryText
+    }
   }
 </script>
 
-<style scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../assets/styles/global";
 
+  .book-list-wrapper {
+    width: 100%;
+    height: 100%;
+    background: white;
+  }
 </style>

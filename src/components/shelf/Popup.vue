@@ -40,12 +40,11 @@
         }, 200);
       },
       confirm() {
+        // 确认删除
         // 隐藏下拉框和蒙层
-        console.log("confirm");
+        // 因为这里放置在标题栏，所以跳转到ShelfTitle => onPopupDelete
         this.hide();
-        setTimeout(() => {
-          this.$emit('confirm');
-        }, 200);
+        this.$emit('confirm');
       },
       // 显示上拉框
       show() {

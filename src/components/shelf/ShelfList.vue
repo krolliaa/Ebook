@@ -156,12 +156,14 @@
           if (this.isEditMode) {
             item.selected = !item.selected;
           } else {
+            // 传递给父组件跳转到
             this.$emit('onBookClick', item, index);
           }
           // 表示点击的是分组
           // 进入分组页面
         } else if (item.type === 2) {
           if (!this.isEditMode) {
+            // 跳转到分组页面
             this.$router.push({
               path: '/book-store/category',
               query: {

@@ -162,19 +162,11 @@
       showPopup() {
         this.$refs.popup.show();
       },
-      // 上拉框点击了删除按钮
+      // 上拉框点击了删除分组按钮
       onPopupDelete() {
-        // 如果确定删除按钮
-        if (this.isDelteGroup) {
-          this.$emit('deleteGroup', this.category);
-          this.isDeleteGroup = false;
-        } else {
-          this.$refs.popup.hide();
-          setTimeout(() => {
-            this.isDeleteGroup = true;
-            this.$refs.popup.show();
-          }, 200)
-        }
+        // 如果确定删除分组
+        this.isDeleteGroup = true;
+        this.$emit('deleteGroup', this.category);
       },
       onPopupChange() {
         this.ifGroupDialogShow = true

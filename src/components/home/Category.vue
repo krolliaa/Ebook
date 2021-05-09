@@ -38,6 +38,7 @@
         this.$router.push({
           path: '/book-store/list',
           query: {
+            // 传递种类
             category: getCategoryName(item.category),
             categoryText: this.categoryText(item.category)
           }

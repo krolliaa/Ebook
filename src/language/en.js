@@ -12,6 +12,7 @@ const messages = {
     readPercent: '$1 is reading $2',
     recommend: 'Recommend',
     seeAll: 'See all',
+    seeAllFeatured: 'See all Featured',
     readers: '$1 is reading',
     featured: 'Featured',
     category: 'Category',

@@ -206,7 +206,6 @@
       },
       // 弹出分组
       showGroupDialog() {
-        this.ifGroupDialogShow = true;
         if (this.isSelected) {
           // 有选择就可以设置移动分组，弹出分组框
           this.ifGroupDialogShow = true;

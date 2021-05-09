@@ -18,7 +18,7 @@
       <!--热门推荐栏目-->
       <recommend class="recommend" :data="recommend" ref="recommend"></recommend>
       <!--精选栏目-->
-      <featured class="featured" :data="featured" :titleText="$t('home.featured')" :btnText="$t('home.seeAll')"
+      <featured class="featured" :data="featured" :titleText="$t('home.featured')" :btnText="$t('home.seeAllFeatured')"
                 ref="featured"></featured>
       <!--各学科图书栏目-->
       <div class="category-list-wrapper" v-for="(item, index) in categoryList" :key="index">
@@ -176,15 +176,15 @@
         this.isBack = true
       },
     },
-    // 现在可以不需要 beforeRouteEnter 钩子，因为现在一进来就是书城首页
-    // beforeRouteEnter(to, from, next) {
-    //   next(vm => {
-    //     if (from.path === '/book-store/list' && from.query.keyword) {
-    //       vm.ifShowSearchPage = true
-    //       vm.$refs.searchBar.setKeyword(from.query.keyword)
-    //     }
-    //   })
-    // },
+    // 初始化下一个路由，使得页面更加顺畅
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        if (from.path === '/book-store/list' && from.query.keyword) {
+          vm.ifShowSearchPage = true
+          vm.$refs.searchBar.setKeyword(from.query.keyword)
+        }
+      })
+    },
     beforeDestroy() {
       if (this.bookListOffsetY && !this.isBack) {
         setLocalStorage('offsetY', this.bookListOffsetY)

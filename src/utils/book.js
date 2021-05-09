@@ -24,6 +24,32 @@ export const FONT_FAMILY = [
   {fontFamily: 'Tangerine'}
 ]
 
+// 获取种类
+export const categoryList = {
+  'ComputerScience': 1,
+  'SocialSciences': 2,
+  'Economics': 3,
+  'Education': 4,
+  'Engineering': 5,
+  'Environment': 6,
+  'Geography': 7,
+  'History': 8,
+  'Laws': 9,
+  'LifeSciences': 10,
+  'Literature': 11,
+  'Biomedicine': 12,
+  'BusinessandManagement': 13,
+  'EarthSciences': 14,
+  'MaterialsScience': 15,
+  'Mathematics': 16,
+  'MedicineAndPublicHealth': 17,
+  'Philosophy': 18,
+  'Physics': 19,
+  'PoliticalScienceAndInternationalRelations': 20,
+  'Psychology': 21,
+  'Statistics': 22
+}
+
 // 主题列表
 export function themeList(vue) {
   return [

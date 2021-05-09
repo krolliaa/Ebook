@@ -31,6 +31,11 @@
         this.ifOnTouch = false
       },
       click() {
+        if (this.btn === '查看全部精选')
+          alert('暂时只有这6本书哦~');
+        else if (this.btn === 'See all Featured') {
+          alert('There are only 6 books for now~');
+        }
         // 在父组件实现具体的操作比如更换、查看全部
         this.$emit('onClick')
       }

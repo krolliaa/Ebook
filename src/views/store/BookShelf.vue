@@ -222,7 +222,12 @@
             item.id = index + 1
           })
         }
-
+        // 退出编辑模式
+        this.onEditClick(false);
+        // 保存书架信息到本地存储
+        this.saveBookShelfToLocalStorage();
+        // 弹出按钮表明成功移入分组（新建即移入，移入即新建）
+        this.showToast(this.$t('shelf.moveBookInSuccess').replace('$1', group.title));
       },
       // 10新建分组
       newGroup(group) {
@@ -299,9 +304,15 @@
           id: Number.MAX_SAFE_INTEGER
         })
       },
-      // 17点击了图书
-      onBookClick() {
-        alert("点击了图书")
+      // 17点击了图书 => 阅读本书
+      onBookClick(item, index) {
+        this.$router.push({
+          path: '/book-store/detail',
+          query: {
+            fileName: item.fileName,
+            category: item.categoryText
+          }
+        })
       },
       // 18点击了编辑
       onEditClick(v) {

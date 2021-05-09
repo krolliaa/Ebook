@@ -63,6 +63,9 @@
             item.style.width = this.width
           })
         })
+      },
+      showBookCategory() {
+        alert("暂时只有这三本书哦~");
       }
     }
   }

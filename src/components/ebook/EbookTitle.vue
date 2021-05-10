@@ -5,13 +5,10 @@
         <span class="icon-back" @click="back"></span>
       </div>
       <div class="right">
-        <div class="icon-wrapper">
+        <div class="icon-wrapper" @click="gotoBookShelf">
           <span class="icon-shelf"></span>
         </div>
-        <div class="icon-wrapper">
-          <span class="icon-cart"></span>
-        </div>
-        <div class="icon-wrapper">
+        <div class="icon-wrapper" @click="gotoBookHome">
           <span class="icon-more"></span>
         </div>
       </div>
@@ -21,13 +18,22 @@
 
 <script>
   import {ebookMixin} from "../../utils/mixin.js";
+  import {getLocalStorage} from "../../utils/localStorage";
 
   export default {
     name: "EbookTitle",
     mixins: [ebookMixin],
     methods: {
       back() {
-        alert("back");
+        // 回到上一页
+        this.$router.go(-1);
+      },
+      gotoBookShelf() {
+        console.log(getLocalStorage('bookShelf'));
+        this.$router.push('/book-store/');
+      },
+      gotoBookHome() {
+        this.$router.push('/book-store/');
       }
     }
   }

@@ -134,8 +134,6 @@
     methods: {
       showBookDetail() {
         // 显示图书细节 => 跳转到图书详情页面
-        alert("阅读细节完成！");
-        console.log(this.data);
         if (this.data) {
           showBookDetail(this, this.data);
         }

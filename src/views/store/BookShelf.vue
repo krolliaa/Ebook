@@ -67,6 +67,8 @@
   import {shelf} from "../../api/book";
   import {realPx} from "../../utils/utils";
   import {getLocalStorage, setLocalStorage} from "../../utils/localStorage";
+  import {clearLocalStorage} from "../../utils/localStorage";
+  import {clearLocalForage} from "../../utils/localForage";
 
   const BOOK_SHELF_KEY = 'bookShelf';
 
@@ -354,7 +356,11 @@
       },
       // 19点击了清除缓存
       clearCache() {
-        alert("点了清除");
+        clearLocalStorage();
+        clearLocalForage(() => {
+          this.getBookShelf();
+        });
+        this.showToast(this.$t('shelf.clearCacheSuccess'));
       },
       // 20点击了搜索框
       onSearchClick() {

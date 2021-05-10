@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// 书城首页
 export function home2() {
   return axios({
     method: 'get',
@@ -9,6 +10,7 @@ export function home2() {
   })
 }
 
+// 图书详情页
 export function detail(book) {
   return axios({
     method: 'get',
@@ -19,6 +21,7 @@ export function detail(book) {
   })
 }
 
+// 全部书籍
 export function flatList() {
   return axios({
     method: 'get',
@@ -40,6 +43,7 @@ export function home() {
   })
 }
 
+// 书架
 export function shelf() {
   return axios({
     method: 'get',

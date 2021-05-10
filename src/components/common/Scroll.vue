@@ -32,9 +32,12 @@
       scrollTo(x, y) {
         this.$refs.scrollWrapper.scrollTo(x, y)
       },
-      refresh() {
+      refresh(speak = -1) {
         if (this.$refs.scrollWrapper) {
-          this.$refs.scrollWrapper.style.height = window.innerHeight - realPx(this.top) - realPx(this.bottom) + 'px'
+          if (speak != -1)
+            this.$refs.scrollWrapper.style.height = window.innerHeight - realPx(this.top) + 'px'
+          else
+            this.$refs.scrollWrapper.style.height = window.innerHeight - realPx(this.top) - realPx(this.bottom) + 'px'
           this.$refs.scrollWrapper.addEventListener('scroll', this.handleScroll)
         }
       }

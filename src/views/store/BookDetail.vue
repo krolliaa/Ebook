@@ -309,18 +309,22 @@
       read(item) {
         getLocalForage(this.bookItem.fileName, (err, value) => {
           if (!err && value instanceof Blob) {
+            console.log("11");
             this.$router.push({
-              path: `/ebook/${this.bookItem.fileName}`,
+              // path: `/ebook/${this.bookItem.fileName}`,
+              path: `/ebook/${this.bookItem.categoryText}|${this.bookItem.fileName}`,
               query: {
                 navigation: item.href
               }
             })
           } else {
+            console.log("22");
             this.$router.push({
-              path: `/ebook/${this.bookItem.fileName}`,
+              // path: `/ebook/${this.bookItem.fileName}`,
+              path: `/ebook/${this.bookItem.categoryText}|${this.bookItem.fileName}`,
               query: {
                 navigation: item.href,
-                opf: this.opf
+                // opf: this.opf
               }
             })
           }
@@ -331,14 +335,14 @@
         getLocalForage(this.bookItem.fileName, (err, value) => {
           if (!err && value instanceof Blob) {
             this.$router.push({
-              path: `/ebook/${this.bookItem.fileName}`
+              path: `/ebook/${this.bookItem.categoryText}|${this.bookItem.fileName}`
             })
           } else {
             this.$router.push({
-              path: `/ebook/${this.bookItem.fileName}`,
-              query: {
-                opf: this.opf
-              }
+              path: `/ebook/${this.bookItem.categoryText}|${this.bookItem.fileName}`,
+              // query: {
+              //   opf: this.opf
+              // }
             })
           }
         })

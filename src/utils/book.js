@@ -104,6 +104,12 @@ export function themeList(vue) {
   ]
 }
 
+// 查找图书
+export function findBook(fileName) {
+  const bookList = getLocalStorage(BOOK_SHELF_KEY)
+  return flatBookList(bookList).find(item => item.fileName === fileName)
+}
+
 // 动态添加主题样式文件
 export function addCss(href) {
   const link = document.createElement('link');

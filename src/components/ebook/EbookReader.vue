@@ -54,6 +54,8 @@
       prevPage() {
         // 如果渲染图书存在，则往前翻页
         if (this.rendition) {
+          setTimeout(() => {
+          }, 100);
           this.rendition.prev().then(() => {
             this.refreshLocation();
           });
@@ -62,6 +64,8 @@
       },
       // 向下翻页
       nextPage() {
+        setTimeout(() => {
+        }, 100);
         // 如果渲染图书存在，则往后翻页
         if (this.rendition) {
           this.rendition.next().then(() => {
@@ -225,6 +229,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+
     .ebook-reader-mask {
       position: absolute;
       top: 0;

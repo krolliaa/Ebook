@@ -33,7 +33,6 @@
     },
     methods: {
       third() {
-        console.log("third");
         this.hide()
         setTimeout(() => {
           this.$emit('third')

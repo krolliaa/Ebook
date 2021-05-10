@@ -29,7 +29,6 @@
         this.$router.go(-1);
       },
       gotoBookShelf() {
-        console.log(getLocalStorage('bookShelf'));
         this.$router.push('/book-store/');
       },
       gotoBookHome() {

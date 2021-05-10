@@ -301,15 +301,15 @@
           })
         }
       },
+      // 尚未实现
       downloadBook() {
-        const opf = `${process.env.VUE_APP_EPUB_URL}/${this.bookItem.categoryText}/${this.bookItem.fileName}/OEBPS/package.opf`
-        this.parseBook(opf)
+        // const opf = `${process.env.VUE_APP_EPUB_URL}/${this.bookItem.categoryText}/${this.bookItem.fileName}/OEBPS/package.opf`;
+        // this.parseBook(opf);
       },
       // 点击目录可以直接跳转阅读
       read(item) {
         getLocalForage(this.bookItem.fileName, (err, value) => {
           if (!err && value instanceof Blob) {
-            console.log("11");
             this.$router.push({
               // path: `/ebook/${this.bookItem.fileName}`,
               path: `/ebook/${this.bookItem.categoryText}|${this.bookItem.fileName}`,
@@ -318,7 +318,6 @@
               }
             })
           } else {
-            console.log("22");
             this.$router.push({
               // path: `/ebook/${this.bookItem.fileName}`,
               path: `/ebook/${this.bookItem.categoryText}|${this.bookItem.fileName}`,
@@ -330,7 +329,7 @@
           }
         })
       },
-      // 阅读器功能
+      // 图书详情页点击阅读跳转阅读
       readBook() {
         getLocalForage(this.bookItem.fileName, (err, value) => {
           if (!err && value instanceof Blob) {

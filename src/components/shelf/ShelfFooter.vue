@@ -174,7 +174,8 @@
           this.showPrivate();
         } else if (item.index === 2) {
           // 是否离线下载
-          this.showDownload();
+          alert("下载功能还没有开启哦~敬请期待~");
+          // this.showDownload();
         } else if (item.index === 3) {
           // 是否到分组
           this.showGroupDialog();
